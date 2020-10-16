@@ -7,9 +7,15 @@ assignees: ''
 
 ---
 
-## Describe the issue
-A clear and concise description of what the problem is. 
-**Does it relate to any epic?** 
+## Feature Request
+**Story** 
+**As**: `who`
+
+**`who` want**: `what` 
+
+**So that**: `why`
+
+
+##Does it relate to any epic?
 
 ## Additional Notes
-Add any other context or screenshots about the feature request here.
