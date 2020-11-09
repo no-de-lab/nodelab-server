@@ -1,0 +1,8 @@
+[database]
+host = "mysql"
+database = "nodelab"
+username = "nodelab"
+password = "test"
+
+[context]
+timeout = 2
