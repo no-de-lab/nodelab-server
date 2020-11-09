@@ -8,7 +8,7 @@ tmp_dir = "tmp"
 
 [build]
 # Just plain old shell command. You could use `make` as well.
-cmd = "go build -o ./tmp/app/engine cmd/nodelabd/main.go"
+cmd = "make build-air"
 # Binary file yields from `cmd`.
 bin = "tmp/app"
 
@@ -21,7 +21,7 @@ log = "air_errors.log"
 # Watch these filename extensions.
 include_ext = ["go", "yaml"]
 # Ignore these filename extensions or directories.
-exclude_dir = ["tmp"]
+exclude_dir = ["tmp", "vendor"]
 # It's not necessary to trigger build each time file changes if it's too frequent.
 delay = 1000 # ms
 
