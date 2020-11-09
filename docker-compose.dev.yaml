@@ -1,7 +1,8 @@
 version: "3"
 
 services:
-  server-dev:
+  server:
+    container_name: nodelab
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -9,4 +10,23 @@ services:
       - .:/app
     ports:
       - 9090:9090
-    command: ["air"]
+    command: ["wait-for-it.sh", "db:3306", "--", "air"]
+    depends_on:
+      - db
+  db:
+    container_name: mysql
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_USER: nodelab
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: nodelab
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_db:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+volumes:
+  mysql_db:
