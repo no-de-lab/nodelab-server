@@ -3,11 +3,7 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/no-de-lab/nodelab-server/config"
-	"github.com/no-de-lab/nodelab-server/db"
-	uh "github.com/no-de-lab/nodelab-server/user/delivery/http"
-	"github.com/no-de-lab/nodelab-server/user/repository"
-	"github.com/no-de-lab/nodelab-server/user/service"
+	"github.com/gorilla/mux"
 	"net/http"
 	"os"
 	"os/signal"
@@ -26,19 +22,18 @@ var (
 func main() {
 	flag.Parse()
 
-	c := config.LoadConfig()
-	h := http.NewServeMux()
+	container := InitializeDIContainer()
 
-	dbConn := db.NewDatabase(c)
-	userRepository := repository.NewUserRepository(dbConn)
-	userService := service.NewUserService(userRepository, c)
-	userHandler := uh.NewUserHandler(userService)
+	mainRouter := mux.NewRouter()
 
-	h.Handle("/", userHandler)
-	// Setting timeouts and handlers for http server
+	for _, h := range container.Handlers {
+		h.SetupRoutes(mainRouter)
+	}
+
+	//Setting timeouts and handlers for http server
 	s := &http.Server{
 		Addr:         *addr,
-		Handler:      h,
+		Handler:      mainRouter,
 		IdleTimeout:  idleTimeout,
 		ReadTimeout:  readTimeout,
 		WriteTimeout: writeTimeout,
