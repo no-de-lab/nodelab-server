@@ -20,9 +20,7 @@ func NewUserRepository(Conn *sqlx.DB) domain.UserRepository {
 
 func (r *userDBRepository) FindById(ctx context.Context, id int) (user *domain.User, err error) {
 	u := domain.User{}
-	query := `SELECT id, email, username, intro, profile_image, created_at, updated_at FROM user WHERE id = ?`
-
-	err = r.Conn.GetContext(ctx, &u, query, id)
+	err = r.Conn.GetContext(ctx, &u, FindByIdQuery, id)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
@@ -37,8 +35,7 @@ func (r *userDBRepository) FindById(ctx context.Context, id int) (user *domain.U
 
 func (r *userDBRepository) FindByEmail(ctx context.Context, email string) (user *domain.User, err error) {
 	u := domain.User{}
-	query := `SELECT email, password FROM user WHERE email = ?`
-	err = r.Conn.GetContext(ctx, &u, query, email)
+	err = r.Conn.GetContext(ctx, &u, FindByEmailQuery, email)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
@@ -52,11 +49,7 @@ func (r *userDBRepository) FindByEmail(ctx context.Context, email string) (user 
 }
 
 func (r *userDBRepository) CreateUser(context context.Context, user *domain.User) (err error) {
-	query := `
-		INSERT INTO user(email, username, password, intro, profile_image, created_at, updated_at) 
-		VALUES(:email, :username, :password, :intro, :profile_image, now(), now())
-	`
-	_, err = r.Conn.NamedExecContext(context, query, user)
+	_, err = r.Conn.NamedExecContext(context, CreateUserQuery, user)
 
 	if err != nil {
 		return
