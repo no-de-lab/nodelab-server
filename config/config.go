@@ -17,12 +17,12 @@ type Context struct {
 	Timeout int
 }
 
-type Config struct {
+type Configuration struct {
 	Database DBInfo `mapstructure:"database"`
 	Context  Context
 }
 
-func LoadConfig() *Config {
+func LoadConfig() *Configuration {
 	viper.SetConfigName("config")
 	viper.SetConfigType("toml")
 	viper.AddConfigPath(".")
@@ -36,10 +36,9 @@ func LoadConfig() *Config {
 		panic(err)
 	}
 
-	config := &Config{}
+	config := &Configuration{}
 
 	err = viper.Unmarshal(&config)
-
 	if err != nil {
 		log.Fatal("config unmarshal error")
 		panic(err)

@@ -13,7 +13,7 @@ var (
 	DatabaseConnectionError = errors.New("database connection error")
 )
 
-func NewDatabase(config *c.Config) *sqlx.DB {
+func NewDatabase(config *c.Configuration) *sqlx.DB {
 	connectionStr := fmt.Sprintf("%s:%s@(%s:3306)/%s", config.Database.Username, config.Database.Password, config.Database.Host, config.Database.Database)
 	db, err := sqlx.Connect("mysql", connectionStr)
 
