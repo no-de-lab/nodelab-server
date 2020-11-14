@@ -4,12 +4,17 @@
 include .env
 export
 
+ROOT = $(PWD)
+
 # Install go modules dependencies
 vendor:
 	go mod vendor
 
+wire:
+	cd ./cmd/nodelabd && wire && cd $(ROOT)
+
 run:
-	@go run ./cmd/nodelabd/main.go
+	@go run ./cmd/nodelab/main.go
 
 up:
 	@docker-compose -f docker-compose.dev.yaml up
@@ -22,4 +27,4 @@ build:
 
 # build for air
 build-air:
-	@go build -o ./tmp/app/engine cmd/nodelabd/main.go
+	@go build -o ./tmp/app/engine cmd/nodelabd/main.go cmd/nodelabd/wire_gen.go
