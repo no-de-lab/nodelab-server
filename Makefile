@@ -16,6 +16,9 @@ wire:
 run:
 	@go run ./cmd/nodelab/main.go
 
+test:
+	@go test ./... -cover
+
 up:
 	@docker-compose -f docker-compose.dev.yaml up
 
