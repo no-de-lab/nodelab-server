@@ -2,8 +2,8 @@ package container
 
 import (
 	"github.com/no-de-lab/nodelab-server/api"
-	ah "github.com/no-de-lab/nodelab-server/auth/delivery/http"
-	uh "github.com/no-de-lab/nodelab-server/user/delivery/http"
+	ah "github.com/no-de-lab/nodelab-server/internal/auth/delivery/http"
+	uh "github.com/no-de-lab/nodelab-server/internal/user/delivery/http"
 )
 
 type DIContainer struct {

@@ -2,8 +2,8 @@ package domain
 
 import (
 	"context"
-	am "github.com/no-de-lab/nodelab-server/auth/model"
-	"github.com/no-de-lab/nodelab-server/user/model"
+	am "github.com/no-de-lab/nodelab-server/internal/auth/model"
+	"github.com/no-de-lab/nodelab-server/internal/user/model"
 )
 
 type AuthService interface {

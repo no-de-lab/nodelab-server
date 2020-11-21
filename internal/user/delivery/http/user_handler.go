@@ -3,10 +3,10 @@ package http
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/no-de-lab/nodelab-server/domain"
 	e "github.com/no-de-lab/nodelab-server/error"
-	userError "github.com/no-de-lab/nodelab-server/user/error"
-	um "github.com/no-de-lab/nodelab-server/user/model"
+	"github.com/no-de-lab/nodelab-server/internal/domain"
+	userError "github.com/no-de-lab/nodelab-server/internal/user/error"
+	um "github.com/no-de-lab/nodelab-server/internal/user/model"
 	"gopkg.in/jeevatkm/go-model.v1"
 	"net/http"
 	"strconv"

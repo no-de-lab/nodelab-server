@@ -7,16 +7,16 @@ package main
 
 import (
 	"github.com/google/wire"
-	"github.com/no-de-lab/nodelab-server/auth"
-	http2 "github.com/no-de-lab/nodelab-server/auth/delivery/http"
-	service2 "github.com/no-de-lab/nodelab-server/auth/service"
 	"github.com/no-de-lab/nodelab-server/config"
 	"github.com/no-de-lab/nodelab-server/container"
 	"github.com/no-de-lab/nodelab-server/db"
-	"github.com/no-de-lab/nodelab-server/user"
-	"github.com/no-de-lab/nodelab-server/user/delivery/http"
-	"github.com/no-de-lab/nodelab-server/user/repository"
-	"github.com/no-de-lab/nodelab-server/user/service"
+	"github.com/no-de-lab/nodelab-server/internal/auth"
+	http2 "github.com/no-de-lab/nodelab-server/internal/auth/delivery/http"
+	service2 "github.com/no-de-lab/nodelab-server/internal/auth/service"
+	"github.com/no-de-lab/nodelab-server/internal/user"
+	"github.com/no-de-lab/nodelab-server/internal/user/delivery/http"
+	"github.com/no-de-lab/nodelab-server/internal/user/repository"
+	"github.com/no-de-lab/nodelab-server/internal/user/service"
 )
 
 // Injectors from wire.go:

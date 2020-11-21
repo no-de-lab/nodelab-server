@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gorilla/mux"
-	"github.com/no-de-lab/nodelab-server/domain"
 	e "github.com/no-de-lab/nodelab-server/error"
-	userError "github.com/no-de-lab/nodelab-server/user/error"
-	"github.com/no-de-lab/nodelab-server/user/model"
+	"github.com/no-de-lab/nodelab-server/internal/domain"
+	userError "github.com/no-de-lab/nodelab-server/internal/user/error"
+	"github.com/no-de-lab/nodelab-server/internal/user/model"
 	"net/http"
 )
 

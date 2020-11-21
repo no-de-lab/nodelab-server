@@ -3,7 +3,7 @@ package repository_test
 import (
 	"context"
 	"github.com/jmoiron/sqlx"
-	"github.com/no-de-lab/nodelab-server/user/repository"
+	"github.com/no-de-lab/nodelab-server/internal/user/repository"
 	"github.com/stretchr/testify/assert"
 	sqlmock "gopkg.in/DATA-DOG/go-sqlmock.v1"
 	"testing"

@@ -3,9 +3,10 @@ package service
 import (
 	"context"
 	"github.com/no-de-lab/nodelab-server/config"
-	"github.com/no-de-lab/nodelab-server/domain"
-	userError "github.com/no-de-lab/nodelab-server/user/error"
-	um "github.com/no-de-lab/nodelab-server/user/model"
+	"github.com/no-de-lab/nodelab-server/internal/domain"
+	userError "github.com/no-de-lab/nodelab-server/internal/user/error"
+	um "github.com/no-de-lab/nodelab-server/internal/user/model"
+	log "github.com/sirupsen/logrus"
 	"gopkg.in/jeevatkm/go-model.v1"
 	"time"
 )
@@ -56,6 +57,7 @@ func (s *userService) CreateUser(c context.Context, user *um.CreateUserModel) (e
 	errs := model.Copy(&userModel, user)
 
 	if errs != nil {
+		log.Error(errs)
 		return userError.ErrUserCreate
 	}
 

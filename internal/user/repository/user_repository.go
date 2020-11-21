@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/jmoiron/sqlx"
-	"github.com/no-de-lab/nodelab-server/domain"
+	"github.com/no-de-lab/nodelab-server/internal/domain"
 )
 
 type userDBRepository struct {
