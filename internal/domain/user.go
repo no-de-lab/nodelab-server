@@ -7,14 +7,14 @@ import (
 )
 
 type User struct {
-	ID           int64       `db:"id"`
-	Email        string      `db:"email"`
-	Username     string      `db:"username"`
-	Password     null.String `db:"password"`
-	Intro        null.String `db:"intro"`
-	ProfileImage null.Int    `db:"profile_image"`
-	CreatedAt    string      `db:"created_at"`
-	UpdatedAt    string      `db:"updated_at"`
+	ID             int64       `db:"id"`
+	Email          string      `db:"email"`
+	Username       string      `db:"username"`
+	Password       null.String `db:"password"`
+	Intro          null.String `db:"intro"`
+	ProfileImageID null.Int    `db:"profile_image_id"`
+	CreatedAt      string      `db:"created_at"`
+	UpdatedAt      string      `db:"updated_at"`
 }
 
 type UserRepository interface {
