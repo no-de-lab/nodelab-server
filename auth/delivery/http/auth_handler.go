@@ -6,8 +6,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/no-de-lab/nodelab-server/domain"
 	e "github.com/no-de-lab/nodelab-server/error"
-	"github.com/no-de-lab/nodelab-server/user/dto"
 	userError "github.com/no-de-lab/nodelab-server/user/error"
+	"github.com/no-de-lab/nodelab-server/user/model"
 	"net/http"
 )
 
@@ -27,7 +27,7 @@ func (a *AuthHandler) SetupRoutes(mainRouter *mux.Router) {
 }
 
 func (a *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
-	var user dto.CreateUserDto
+	var user model.CreateUserModel
 
 	context := r.Context()
 	err := json.NewDecoder(r.Body).Decode(&user)

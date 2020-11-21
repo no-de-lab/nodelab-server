@@ -5,8 +5,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/no-de-lab/nodelab-server/domain"
 	e "github.com/no-de-lab/nodelab-server/error"
-	"github.com/no-de-lab/nodelab-server/user/dto"
 	userError "github.com/no-de-lab/nodelab-server/user/error"
+	um "github.com/no-de-lab/nodelab-server/user/model"
 	"gopkg.in/jeevatkm/go-model.v1"
 	"net/http"
 	"strconv"
@@ -29,7 +29,7 @@ func (h *UserHandler) SetupRoutes(mainRouter *mux.Router) {
 
 func (h *UserHandler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 	var user *domain.User
-	var userInfo dto.UserInfoDto
+	var userInfo um.UserInfoModel
 
 	context := r.Context()
 	vars := mux.Vars(r)

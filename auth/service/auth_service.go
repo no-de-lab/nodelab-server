@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	authDto "github.com/no-de-lab/nodelab-server/auth/dto"
+	am "github.com/no-de-lab/nodelab-server/auth/model"
 	"github.com/no-de-lab/nodelab-server/domain"
-	userDto "github.com/no-de-lab/nodelab-server/user/dto"
 	e "github.com/no-de-lab/nodelab-server/user/error"
+	um "github.com/no-de-lab/nodelab-server/user/model"
 )
 
 type AuthService struct {
@@ -18,11 +18,11 @@ func NewAuthService(service domain.UserService) domain.AuthService {
 	}
 }
 
-func (a *AuthService) Login(ctx context.Context, form *authDto.LoginDto) (err error) {
+func (a *AuthService) Login(ctx context.Context, form *am.LoginModel) (err error) {
 	return nil
 }
 
-func (a *AuthService) Signup(ctx context.Context, user *userDto.CreateUserDto) error {
+func (a *AuthService) Signup(ctx context.Context, user *um.CreateUserModel) error {
 	existsUser, err := a.userService.FindByEmail(ctx, user.Email.String)
 
 	if existsUser != nil {

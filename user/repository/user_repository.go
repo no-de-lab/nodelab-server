@@ -9,18 +9,18 @@ import (
 )
 
 type userDBRepository struct {
-	Conn *sqlx.DB
+	DB *sqlx.DB
 }
 
-func NewUserRepository(Conn *sqlx.DB) domain.UserRepository {
+func NewUserRepository(db *sqlx.DB) domain.UserRepository {
 	return &userDBRepository{
-		Conn,
+		db,
 	}
 }
 
 func (r *userDBRepository) FindById(ctx context.Context, id int) (user *domain.User, err error) {
 	u := domain.User{}
-	err = r.Conn.GetContext(ctx, &u, FindByIdQuery, id)
+	err = r.DB.GetContext(ctx, &u, FindByIdQuery, id)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
@@ -35,7 +35,7 @@ func (r *userDBRepository) FindById(ctx context.Context, id int) (user *domain.U
 
 func (r *userDBRepository) FindByEmail(ctx context.Context, email string) (user *domain.User, err error) {
 	u := domain.User{}
-	err = r.Conn.GetContext(ctx, &u, FindByEmailQuery, email)
+	err = r.DB.GetContext(ctx, &u, FindByEmailQuery, email)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
@@ -49,7 +49,7 @@ func (r *userDBRepository) FindByEmail(ctx context.Context, email string) (user 
 }
 
 func (r *userDBRepository) CreateUser(context context.Context, user *domain.User) (err error) {
-	_, err = r.Conn.NamedExecContext(context, CreateUserQuery, user)
+	_, err = r.DB.NamedExecContext(context, CreateUserQuery, user)
 
 	if err != nil {
 		return

@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/no-de-lab/nodelab-server/config"
 	"github.com/no-de-lab/nodelab-server/domain"
-	"github.com/no-de-lab/nodelab-server/user/dto"
 	userError "github.com/no-de-lab/nodelab-server/user/error"
+	um "github.com/no-de-lab/nodelab-server/user/model"
 	"gopkg.in/jeevatkm/go-model.v1"
 	"time"
 )
@@ -48,7 +48,7 @@ func (s *userService) FindByEmail(c context.Context, email string) (user *domain
 	return
 }
 
-func (s *userService) CreateUser(c context.Context, user *dto.CreateUserDto) (err error) {
+func (s *userService) CreateUser(c context.Context, user *um.CreateUserModel) (err error) {
 	ctx, cancel := context.WithTimeout(c, s.timeout)
 	defer cancel()
 

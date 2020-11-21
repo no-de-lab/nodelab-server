@@ -1,8 +1,8 @@
-package dto
+package model
 
 import "gopkg.in/guregu/null.v4"
 
-type UserInfoDto struct {
+type UserInfoModel struct {
 	Id              null.Int    `json:"id"`
 	Email           null.String `json:"email"`
 	Username        null.String `json:"username"`

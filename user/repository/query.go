@@ -4,5 +4,5 @@ const FindByIdQuery = `SELECT id, email, username, intro, profile_image, created
 const FindByEmailQuery = `SELECT email, password FROM user WHERE email = ?`
 const CreateUserQuery = `
 	INSERT INTO user(email, username, password, intro, profile_image, created_at, updated_at) 
-	VALUES(:email, :username, :password, :intro, :profile_image, now(), now())
+	VALUES (:email, :username, :password, :intro, :profile_image, now(), now())
 `

@@ -2,13 +2,13 @@ package domain
 
 import (
 	"context"
-	authDto "github.com/no-de-lab/nodelab-server/auth/dto"
-	"github.com/no-de-lab/nodelab-server/user/dto"
+	am "github.com/no-de-lab/nodelab-server/auth/model"
+	"github.com/no-de-lab/nodelab-server/user/model"
 )
 
 type AuthService interface {
-	Login(ctx context.Context, form *authDto.LoginDto) (err error)
-	Signup(ctx context.Context, user *dto.CreateUserDto) (err error)
+	Login(ctx context.Context, form *am.LoginModel) (err error)
+	Signup(ctx context.Context, user *model.CreateUserModel) (err error)
 	// TODO: add detail
 	SocialLogin() (err error)
 }
