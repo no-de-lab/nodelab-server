@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"github.com/gorilla/mux"
 	"net/http"
 	"os"
 	"os/signal"
@@ -21,12 +22,18 @@ var (
 func main() {
 	flag.Parse()
 
-	h := http.NewServeMux()
+	container := InitializeDIContainer()
 
-	// Setting timeouts and handlers for http server
+	mainRouter := mux.NewRouter()
+
+	for _, h := range container.Handlers {
+		h.SetupRoutes(mainRouter)
+	}
+
+	//Setting timeouts and handlers for http server
 	s := &http.Server{
 		Addr:         *addr,
-		Handler:      h,
+		Handler:      mainRouter,
 		IdleTimeout:  idleTimeout,
 		ReadTimeout:  readTimeout,
 		WriteTimeout: writeTimeout,
