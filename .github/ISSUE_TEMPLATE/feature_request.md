@@ -8,14 +8,6 @@ assignees: ''
 ---
 
 ## Feature Request
-**Story** 
-**As**: `who`
 
-**`who` want**: `what` 
-
-**So that**: `why`
-
-
-##Does it relate to any epic?
 
 ## Additional Notes
