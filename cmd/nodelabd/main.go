@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/no-de-lab/nodelab-server/config"
+	"github.com/no-de-lab/nodelab-server/internal/logger"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -24,6 +26,16 @@ func main() {
 	flag.Parse()
 
 	container := InitializeDIContainer()
+
+	config := config.LoadConfig()
+
+	logLevel := config.Log.Level
+	sentryDSN := config.Log.SentryDSN
+
+	err := logger.InitLogging(logLevel, sentryDSN)
+	if err != nil {
+		log.Errorf("Failed to setup logger with sentry")
+	}
 
 	mainRouter := mux.NewRouter()
 
