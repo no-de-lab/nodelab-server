@@ -1,8 +1,7 @@
-# Title
-
 ## Summary
-1. Issue reference
-2. Description of the changes
+Fixes #issue
+
+## Changes
 
 ## Checklist
 - [ ] This code follows the proper style guide
