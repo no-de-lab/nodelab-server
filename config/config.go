@@ -1,9 +1,10 @@
 package config
 
 import (
+	"strings"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"strings"
 )
 
 type DBInfo struct {
@@ -13,12 +14,18 @@ type DBInfo struct {
 	Password string
 }
 
+type LogInfo struct {
+	Level     string
+	SentryDSN string
+}
+
 type Context struct {
 	Timeout int
 }
 
 type Configuration struct {
-	Database DBInfo `mapstructure:"database"`
+	Database DBInfo  `mapstructure:"database"`
+	Log      LogInfo `mapstructure:"logging"`
 	Context  Context
 }
 
