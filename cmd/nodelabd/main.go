@@ -3,11 +3,12 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/gorilla/mux"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/gorilla/mux"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -48,10 +49,9 @@ func main() {
 		}
 	}()
 
-	sigChan := make(chan os.Signal)
+	sigChan := make(chan os.Signal, 1)
 	// Notify when there is a os interrupt/kill command
 	signal.Notify(sigChan, os.Interrupt)
-	signal.Notify(sigChan, os.Kill)
 
 	// Block the channel here, waiting to receive that os.Interrupt or os.Kill
 	sig := <-sigChan
@@ -62,5 +62,5 @@ func main() {
 	defer cancel()
 
 	// Shut down after completing all hanging requests
-	s.Shutdown(tc)
+	_ = s.Shutdown(tc)
 }
