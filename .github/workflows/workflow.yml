@@ -1,0 +1,46 @@
+name: CICD
+
+on:
+  push:
+  pull_request:
+    branches:
+    - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    # Setup Go
+    - name: Setup Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.15' # The Go version to download (if necessary) and use.
+    
+    # Install all the dependencies
+    - name: Install dependencies
+      run: |
+        go version
+        go mod vendor
+        
+    # Run build of the application
+    - name: Run build
+      run: |
+        go build ./cmd/... 
+      
+    # Run tests and send to codecov
+    - name: Generate coverage report
+      run: |
+        go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+        
+    - name: Upload codecov repo
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} 
+        file: ./coverage.txt
+        flags: unittests 
+        fail_ci_if_error: true 
+        verbose: true 
+        
