@@ -1,7 +1,7 @@
 .PHONY: run vendor build
 
 # load dotenv & export
-include .env
+-include .env
 export
 
 ROOT = $(PWD)
@@ -14,10 +14,10 @@ wire:
 	cd ./cmd/nodelabd && wire && cd $(ROOT)
 
 run:
-	@go run ./cmd/nodelab/main.go
+	@go run ./cmd/nodelabd/main.go
 
 test:
-	@go test ./... -cover
+	@go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
 
 up:
 	@docker-compose -f docker-compose.dev.yaml up

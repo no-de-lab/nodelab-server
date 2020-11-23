@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	am "github.com/no-de-lab/nodelab-server/internal/auth/model"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
 	e "github.com/no-de-lab/nodelab-server/internal/user/error"
@@ -25,6 +26,10 @@ func (a *AuthService) Login(ctx context.Context, form *am.LoginModel) (err error
 
 func (a *AuthService) Signup(ctx context.Context, user *um.CreateUserModel) error {
 	existsUser, err := a.userService.FindByEmail(ctx, user.Email)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
 
 	if existsUser != nil {
 		return e.ErrUserAlreadyExists

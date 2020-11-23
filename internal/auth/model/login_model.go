@@ -1,6 +1,6 @@
 package model
 
 type LoginModel struct {
-	email    string
-	password string
+	Email    string
+	Password string
 }

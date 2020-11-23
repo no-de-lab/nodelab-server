@@ -1,4 +1,8 @@
 # Nodelab API 
+![Actions Status](https://github.com/no-de-lab/nodelab-server/workflows/CICD/badge.svg?branch=dev)
+![golangci-lint](https://github.com/no-de-lab/nodelab-server/workflows/golangci-lint/badge.svg?branch=dev)
+[![codecov](https://codecov.io/gh/no-de-lab/nodelab-server/branch/dev/graph/badge.svg?token=BAEElqEtoc)](https://codecov.io/gh/no-de-lab/nodelab-server)
+
 Nodelab API project
 
 ## Core dependency

@@ -3,11 +3,13 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/gorilla/mux"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/gorilla/mux"
+	"github.com/no-de-lab/nodelab-server/internal/logger"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -23,6 +25,16 @@ func main() {
 	flag.Parse()
 
 	container := InitializeDIContainer()
+	config := container.Config
+
+	logLevel := config.Log.Level
+	sentryDSN := config.Log.SentryDSN
+	phase := config.Phase.Level
+
+	err := logger.InitLogging(logLevel, phase, sentryDSN)
+	if err != nil {
+		log.Errorf("Failed to setup logger with sentry")
+	}
 
 	mainRouter := mux.NewRouter()
 
@@ -48,10 +60,9 @@ func main() {
 		}
 	}()
 
-	sigChan := make(chan os.Signal)
+	sigChan := make(chan os.Signal, 1)
 	// Notify when there is a os interrupt/kill command
 	signal.Notify(sigChan, os.Interrupt)
-	signal.Notify(sigChan, os.Kill)
 
 	// Block the channel here, waiting to receive that os.Interrupt or os.Kill
 	sig := <-sigChan
@@ -62,5 +73,5 @@ func main() {
 	defer cancel()
 
 	// Shut down after completing all hanging requests
-	s.Shutdown(tc)
+	_ = s.Shutdown(tc)
 }
