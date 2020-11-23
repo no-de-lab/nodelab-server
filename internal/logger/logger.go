@@ -23,7 +23,6 @@ func InitLogging(level, phase, dsn string) error {
 	client, err := raven.New(dsn)
 	if err != nil {
 		log.Panicf("Failed to initialize raven client %s", err)
-		return err
 	}
 
 	if phase == "local" {
