@@ -1,7 +1,7 @@
 .PHONY: run vendor build
 
 # load dotenv & export
-include .env
+-include .env
 export
 
 ROOT = $(PWD)
