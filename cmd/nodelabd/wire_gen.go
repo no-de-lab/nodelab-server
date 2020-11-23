@@ -29,7 +29,7 @@ func InitializeDIContainer() *container.DIContainer {
 	userHandler := http.NewUserHandler(userService)
 	authService := service2.NewAuthService(userService)
 	authHandler := http2.NewAuthHandler(authService)
-	diContainer := container.NewDIContainer(userHandler, authHandler)
+	diContainer := container.NewDIContainer(configuration, userHandler, authHandler)
 	return diContainer
 }
 

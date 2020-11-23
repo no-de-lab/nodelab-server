@@ -6,7 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func InitLogging(level string, dsn string) error {
+func InitLogging(level, phase, dsn string) error {
 	switch level {
 	case "debug":
 		log.SetLevel(log.DebugLevel)
@@ -22,8 +22,12 @@ func InitLogging(level string, dsn string) error {
 
 	client, err := raven.New(dsn)
 	if err != nil {
-		log.Errorf("Failed to initialize raven client %s", err)
+		log.Panicf("Failed to initialize raven client %s", err)
 		return err
+	}
+
+	if phase == "local" {
+		return nil
 	}
 
 	hook, err := logrus_sentry.NewWithClientSentryHook(client, []log.Level{
@@ -33,7 +37,7 @@ func InitLogging(level string, dsn string) error {
 	})
 
 	if err != nil {
-		log.Errorf("Failed to initialize sentry hooks, err: %s", err)
+		log.Panicf("Failed to initialize sentry hooks, err: %s", err)
 		return err
 	} else {
 		log.AddHook(hook)

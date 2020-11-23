@@ -18,14 +18,18 @@ type LogInfo struct {
 	Level     string
 	SentryDSN string
 }
+type PhaseInfo struct {
+	Level string
+}
 
 type Context struct {
 	Timeout int
 }
 
 type Configuration struct {
-	Database DBInfo  `mapstructure:"database"`
-	Log      LogInfo `mapstructure:"logging"`
+	Database DBInfo    `mapstructure:"database"`
+	Log      LogInfo   `mapstructure:"logging"`
+	Phase    PhaseInfo `mapstructure:"phase"`
 	Context  Context
 }
 

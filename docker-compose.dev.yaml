@@ -10,7 +10,7 @@ services:
       - .:/app
     ports:
       - 9090:9090
-    command: ["./wait-for-it.sh", "db:3306", "--", "air"]
+    command: ["wait-for-it.sh", "db:3306", "--", "air"]
     depends_on:
       - db
   db:

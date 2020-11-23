@@ -23,18 +23,18 @@ jobs:
     - name: Install dependencies
       run: |
         go version
-        go mod vendor
+        make vendor
         
     # Run build of the application
     - name: Run build
       run: |
-        go build ./cmd/... 
+        make build
       
     # Run tests and send to codecov
     - name: Generate coverage report
       run: |
-        go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
-        
+        make test
+
     - name: Upload codecov repo
       uses: codecov/codecov-action@v1
       with:
