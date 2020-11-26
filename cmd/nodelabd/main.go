@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/no-de-lab/nodelab-server/api"
@@ -26,7 +27,7 @@ func main() {
 		h.SetupRoutes(e)
 	}
 
-	log.Fatal(e.Start(":9090"))
+	log.Fatal(e.Start(fmt.Sprintf(":%d", container.Config.Server.Port)))
 
 	sigChan := make(chan os.Signal, 1)
 	// Notify when there is a os interrupt/kill command
