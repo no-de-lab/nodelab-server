@@ -1,9 +1,7 @@
 package http
 
 import (
-	"encoding/json"
-	"github.com/gorilla/mux"
-	e "github.com/no-de-lab/nodelab-server/error"
+	"github.com/labstack/echo/v4"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
 	userError "github.com/no-de-lab/nodelab-server/internal/user/error"
 	um "github.com/no-de-lab/nodelab-server/internal/user/model"
@@ -22,48 +20,35 @@ func NewUserHandler(us domain.UserService) *UserHandler {
 	}
 }
 
-func (h *UserHandler) SetupRoutes(mainRouter *mux.Router) {
-	r := mainRouter.PathPrefix("/users").Subrouter()
-	r.HandleFunc("/{id}", h.GetUserInfo).Methods("GET")
+func (h *UserHandler) SetupRoutes(e *echo.Echo) {
+	userRouter := e.Group("/users")
+	userRouter.GET("/:id", h.GetUserInfo)
 }
 
-func (h *UserHandler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) GetUserInfo(c echo.Context) error {
 	var user *domain.User
 	var userInfo um.UserInfoModel
 
-	context := r.Context()
-	vars := mux.Vars(r)
-	id, err := strconv.ParseInt(vars["id"], 10, 64)
+	context := c.Request().Context()
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 
 	if err != nil {
-		http.Error(w, e.ErrBadRequest.Error(), http.StatusBadRequest)
-		return
+		return echo.ErrBadRequest
 	}
 
-	user, err = h.UserService.FindById(context, int(id))
-
-	if err != nil {
-		http.Error(w, e.ErrInternalServer.Error(), http.StatusInternalServerError)
-		return
+	if user, err = h.UserService.FindById(context, int(id)); err != nil {
+		return err
 	}
 
 	if user == nil {
-		http.Error(w, userError.ErrUserNotFound.Error(), http.StatusNoContent)
-		return
+		return userError.ErrUserNotFound
 	}
 
 	errs := model.Copy(&userInfo, user)
 
 	if errs != nil {
-		http.Error(w, e.ErrInternalServer.Error(), http.StatusInternalServerError)
-		return
+		return errs[0]
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(userInfo)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	return c.JSON(http.StatusOK, user)
 }
