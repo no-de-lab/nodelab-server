@@ -16,6 +16,7 @@ require (
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.6.1
+	github.com/tylerb/graceful v1.2.15
 	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 // indirect
 	golang.org/x/tools v0.0.0-20201121010211-780cb80bd7fb // indirect
 	gopkg.in/DATA-DOG/go-sqlmock.v1 v1.3.0

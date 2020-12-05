@@ -8,8 +8,9 @@ import (
 	"github.com/no-de-lab/nodelab-server/api"
 	"github.com/no-de-lab/nodelab-server/internal/logger"
 	log "github.com/sirupsen/logrus"
-	"os"
-	"os/signal"
+	"github.com/tylerb/graceful"
+	"net/http"
+	"time"
 )
 
 func main() {
@@ -27,13 +28,14 @@ func main() {
 		h.SetupRoutes(e)
 	}
 
-	log.Fatal(e.Start(fmt.Sprintf(":%d", container.Config.Server.Port)))
+	server := &http.Server{
+		Addr:         fmt.Sprintf(":%d", container.Config.Server.Port),
+		IdleTimeout:  time.Second * 120,
+		WriteTimeout: time.Second * 30,
+		ReadTimeout:  time.Second * 30,
+	}
 
-	sigChan := make(chan os.Signal, 1)
-	// Notify when there is a os interrupt/kill command
-	signal.Notify(sigChan, os.Interrupt)
+	e.Server = server
 
-	// Block the channel here, waiting to receive that os.Interrupt or os.Kill
-	sig := <-sigChan
-	log.Println("Received terminate signal, gracefully shutting down", sig)
+	log.Fatal(graceful.ListenAndServe(e.Server, 30*time.Second))
 }
