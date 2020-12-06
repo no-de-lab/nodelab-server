@@ -30,12 +30,11 @@ func main() {
 
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", container.Config.Server.Port),
-		IdleTimeout:  time.Second * 120,
+		ReadTimeout:  time.Second * 120,
 		WriteTimeout: time.Second * 30,
-		ReadTimeout:  time.Second * 30,
+		IdleTimeout:  time.Second * 30,
 	}
 
-	e.Server = server
-
-	log.Fatal(graceful.ListenAndServe(e.Server, 30*time.Second))
+	log.Fatal(e.StartServer(server))
+	log.Fatal(graceful.ListenAndServe(server, time.Second*30))
 }
