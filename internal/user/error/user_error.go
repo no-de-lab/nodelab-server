@@ -1,9 +1,7 @@
 package error
 
-import "errors"
+import error "github.com/no-de-lab/nodelab-server/error"
 
 var (
-	ErrUserAlreadyExists = errors.New("user already exists")
-	ErrUserCreate        = errors.New("user create error")
-	ErrUserNotFound      = errors.New("No members found")
+	ErrUserNotFound = error.NewBusinessError("No members found")
 )

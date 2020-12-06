@@ -1,12 +1,10 @@
 package http
 
 import (
-	"encoding/json"
 	"errors"
-	"github.com/gorilla/mux"
-	e "github.com/no-de-lab/nodelab-server/error"
+	"github.com/labstack/echo/v4"
+	e "github.com/no-de-lab/nodelab-server/internal/auth/error"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
-	userError "github.com/no-de-lab/nodelab-server/internal/user/error"
 	"github.com/no-de-lab/nodelab-server/internal/user/model"
 	"net/http"
 )
@@ -21,32 +19,28 @@ func NewAuthHandler(service domain.AuthService) *AuthHandler {
 	}
 }
 
-func (a *AuthHandler) SetupRoutes(mainRouter *mux.Router) {
-	r := mainRouter.PathPrefix("/auth").Subrouter()
-	r.HandleFunc("/signup", a.Signup).Methods("POST")
+func (a *AuthHandler) SetupRoutes(e *echo.Echo) {
+	authGroup := e.Group("/auth")
+	authGroup.POST("/signup", a.Signup)
 }
 
-func (a *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
+func (a *AuthHandler) Signup(c echo.Context) (err error) {
 	var user model.CreateUserModel
 
-	context := r.Context()
-	err := json.NewDecoder(r.Body).Decode(&user)
+	context := c.Request().Context()
 
-	if err != nil {
-		http.Error(w, e.ErrBadRequest.Error(), http.StatusBadRequest)
+	if err = c.Bind(&user); err != nil {
 		return
 	}
 
 	err = a.authService.Signup(context, &user)
 
 	if err != nil {
-		if errors.Is(err, userError.ErrUserAlreadyExists) {
-			http.Error(w, userError.ErrUserAlreadyExists.Error(), http.StatusConflict)
-			return
+		if errors.Is(err, e.ErrUserAlreadyExists) {
+			return echo.NewHTTPError(http.StatusConflict, e.ErrUserAlreadyExists.Error())
 		}
-		http.Error(w, e.ErrInternalServer.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	return c.NoContent(http.StatusOK)
 }

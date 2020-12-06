@@ -1,7 +1,7 @@
 package api
 
-import "github.com/gorilla/mux"
+import "github.com/labstack/echo/v4"
 
 type ApiHandler interface {
-	SetupRoutes(r *mux.Router)
+	SetupRoutes(e *echo.Echo)
 }

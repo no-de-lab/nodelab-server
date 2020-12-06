@@ -13,3 +13,6 @@ sentryDSN = "https://f3ad1bf0dd4e4aa0bf6b120772dbf9cc@o474972.ingest.sentry.io/5
 
 [phase]
 level = "local"
+
+[server]
+port = 9090

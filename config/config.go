@@ -18,6 +18,11 @@ type LogInfo struct {
 	Level     string
 	SentryDSN string
 }
+
+type ServerInfo struct {
+	Port int64
+}
+
 type PhaseInfo struct {
 	Level string
 }
@@ -27,9 +32,10 @@ type Context struct {
 }
 
 type Configuration struct {
-	Database DBInfo    `mapstructure:"database"`
-	Log      LogInfo   `mapstructure:"logging"`
-	Phase    PhaseInfo `mapstructure:"phase"`
+	Database DBInfo     `mapstructure:"database"`
+	Log      LogInfo    `mapstructure:"logging"`
+	Phase    PhaseInfo  `mapstructure:"phase"`
+	Server   ServerInfo `mapstructure:"server"`
 	Context  Context
 }
 

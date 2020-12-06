@@ -3,10 +3,17 @@ package logger
 import (
 	"github.com/evalphobia/logrus_sentry"
 	"github.com/getsentry/raven-go"
+	"github.com/no-de-lab/nodelab-server/container"
 	log "github.com/sirupsen/logrus"
 )
 
-func InitLogging(level, phase, dsn string) error {
+func InitLogging() {
+	config := container.Container.Config
+
+	level := config.Log.Level
+	dsn := config.Log.SentryDSN
+	phase := config.Phase.Level
+
 	switch level {
 	case "debug":
 		log.SetLevel(log.DebugLevel)
@@ -26,7 +33,7 @@ func InitLogging(level, phase, dsn string) error {
 	}
 
 	if phase == "local" {
-		return nil
+		return
 	}
 
 	hook, err := logrus_sentry.NewWithClientSentryHook(client, []log.Level{
@@ -37,10 +44,7 @@ func InitLogging(level, phase, dsn string) error {
 
 	if err != nil {
 		log.Panicf("Failed to initialize sentry hooks, err: %s", err)
-		return err
 	} else {
 		log.AddHook(hook)
 	}
-
-	return nil
 }
