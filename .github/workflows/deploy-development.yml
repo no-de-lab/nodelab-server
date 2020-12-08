@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - development
+      - feature/25-ecs-cd
 
 name: Deploy to Amazon ECS Development
 
@@ -35,7 +35,7 @@ jobs:
           docker build -f production.dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-      - name:
+      - name: ECS Deploy
         uses: marocchino/setup-ecs-cli@v1
         with:
           version: "v1.18.0"
