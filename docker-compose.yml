@@ -1,0 +1,15 @@
+version: '3'
+services:
+  api:
+    image: 914504654636.dkr.ecr.ap-northeast-2.amazonaws.com/nodelab-api
+    ports:
+      - "${CONTAINER_PORT}:${CONTAINER_PORT}"
+    command: ["./nodelabd"]
+    environment:
+      - PHASE_LEVEL=${PHASE}
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: nodelab-api
+        awslogs-region: ap-northeast-2
+        awslogs-stream-prefix: nodelab-api
