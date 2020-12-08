@@ -49,6 +49,7 @@ jobs:
           SSM_ARN: ${{ secrets.SSM_ARN }}
           SUBNET_1: ${{ secrets.SUBNET_1 }}
           SUBNET_2: ${{ secrets.SUBNET_2 }}
+          SECURITY_GROUP: ${{ secrets.SECURITY_GROUP }}
           IMAGE: ${{ steps.build-image.outputs.image }}
         run: |
            ecs-cli compose --cluster nodelab-dev-fargate \
