@@ -7,6 +7,7 @@ package main
 
 import (
 	"github.com/google/wire"
+	"github.com/no-de-lab/nodelab-server/api/healthcheck"
 	"github.com/no-de-lab/nodelab-server/config"
 	"github.com/no-de-lab/nodelab-server/container"
 	"github.com/no-de-lab/nodelab-server/db"
@@ -29,10 +30,11 @@ func InitializeDIContainer() *container.DIContainer {
 	userHandler := http.NewUserHandler(userService)
 	authService := service2.NewAuthService(userService)
 	authHandler := http2.NewAuthHandler(authService)
-	diContainer := container.NewDIContainer(configuration, userHandler, authHandler)
+	healthCheckHandler := healthcheck.NewHealthCheckHandler()
+	diContainer := container.NewDIContainer(configuration, userHandler, authHandler, healthCheckHandler)
 	return diContainer
 }
 
 // wire.go:
 
-var MainSet = wire.NewSet(auth.AuthSet, user.UserSet, config.LoadConfig, db.NewDatabase, container.NewDIContainer)
+var MainSet = wire.NewSet(healthcheck.NewHealthCheckHandler, auth.AuthSet, user.UserSet, config.LoadConfig, db.NewDatabase, container.NewDIContainer)
