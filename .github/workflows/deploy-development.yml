@@ -53,6 +53,7 @@ jobs:
           IMAGE: ${{ steps.build-image.outputs.image }}
         run: |
            ecs-cli compose --cluster nodelab-dev-fargate \
+            --project-name nodelab-api \
             service up \
             --launch-type FARGATE \
             --target-group-arn $TARGET_GROUP_ARN \
