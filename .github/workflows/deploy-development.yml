@@ -35,10 +35,10 @@ jobs:
           docker build -f production.dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-      - name: ECS Deploy
-        uses: marocchino/setup-ecs-cli@v1
+      - uses: marocchino/setup-ecs-cli@v1
         with:
           version: "v1.18.0"
+      - name: ECS Deploy
         env:
           PHASE: development
           CPU_LIMIT: 512
