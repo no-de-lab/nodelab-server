@@ -1,7 +1,7 @@
 version: '3'
 services:
   api:
-    image: 914504654636.dkr.ecr.ap-northeast-2.amazonaws.com/nodelab-api
+    image: ${IMAGE}
     ports:
       - "${CONTAINER_PORT}:${CONTAINER_PORT}"
     command: ["./nodelabd"]
