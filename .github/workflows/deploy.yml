@@ -1,8 +1,8 @@
 on:
   push:
     branches:
-      - feature/25-ecs-cd
-  workflow_dispatch:
+      - dev
+      - main
 
 name: Deploy to Amazon ECS Development
 
@@ -54,7 +54,7 @@ jobs:
         env:
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch  }}
         run: |
-          if [ $BRANCH_NAME = 'feature/25-ecs-cd' ]; then
+          if [ $BRANCH_NAME = 'dev' ]; then
             CPU_LIMIT=512
             MEM_LIMIT=1024
             CLUSTER_NAME=nodelab-dev
