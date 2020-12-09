@@ -66,19 +66,19 @@ jobs:
             PHASE=production
           fi
 
-          echo "::set-output name=phase::${PHASE}"
-          echo "::set-output name=cpu_limit::${CPU_LIMIT}"
-          echo "::set-output name=mem_limit::${MEM_LIMIT}"
-          echo "::set-output name=cluster_name::${CLUSTER_NAME}"
+          echo "::set-output name=phase::$PHASE"
+          echo "::set-output name=cpu_limit::$CPU_LIMIT"
+          echo "::set-output name=mem_limit::$MEM_LIMIT"
+          echo "::set-output name=cluster_name::$CLUSTER_NAME"
 
       # ECS Deploy
       - name: ECS Deploy
         env:
           CONTAINER_PORT: 9090
-          CLUSTER_NAME: ${{ steps.outputs.deploy_env.cluster_name }}
-          PHASE: ${{ steps.outputs.deploy_env.phase }}
-          CPU_LIMIT: ${{ steps.outputs.deploy_env.cpu_limit }}
-          MEM_LIMIT: ${{ steps.outputs.deploy_env.mem_limit }}
+          CLUSTER_NAME: ${{ steps.deploy_env.outputs.cluster_name }}
+          PHASE: ${{ steps.deploy_env.outputs.phase }}
+          CPU_LIMIT: ${{ steps.deploy_env.outputs.cpu_limit }}
+          MEM_LIMIT: ${{ steps.deploy_env.outputs.mem_limit }}
           TASK_EXECUTION_ROLE_ARN: ${{ secrets.TASK_EXECUTION_ROLE_ARN }}
           TARGET_GROUP_ARN: ${{ secrets.TARGET_GROUP_ARN }}
           SSM_ARN: ${{ secrets.SSM_ARN }}
