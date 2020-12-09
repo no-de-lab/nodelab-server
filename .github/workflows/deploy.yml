@@ -61,7 +61,7 @@ jobs:
             PHASE=development
           else
             CPU_LIMIT=1024
-            MEM_LIMIT=1024
+            MEM_LIMIT=2048
             CLUSTER_NAME=nodelab
             PHASE=production
           fi
