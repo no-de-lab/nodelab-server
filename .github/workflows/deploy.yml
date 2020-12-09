@@ -54,7 +54,7 @@ jobs:
         env:
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch  }}
         run: |
-          if [ $BRANCH_NAME = 'dev' ]; then
+          if [ $BRANCH_NAME = 'feature/25-ecs-cd' ]; then
             CPU_LIMIT=512
             MEM_LIMIT=1024
             CLUSTER_NAME=nodelab-dev
