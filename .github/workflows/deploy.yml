@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - feature/25-ecs-cd
+  workflow_dispatch:
 
 name: Deploy to Amazon ECS Development
 
@@ -13,15 +14,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
@@ -38,12 +47,38 @@ jobs:
       - uses: marocchino/setup-ecs-cli@v1
         with:
           version: "v1.18.0"
+
+      # Setup deploy environment variables
+      - name: Setup deploy environment variables
+        id: deploy_env
+        env:
+          BRANCH_NAME: ${{ steps.extract_branch.outputs.branch  }}
+        run: |
+          if [ $BRANCH_NAME = 'dev' ]; then
+            CPU_LIMIT=512
+            MEM_LIMIT=1024
+            CLUSTER_NAME=nodelab-dev
+            PHASE=development
+          else
+            CPU_LIMIT=1024
+            MEM_LIMIT=1024
+            CLUSTER_NAME=nodelab
+            PHASE=production
+          fi
+
+          echo "::set-output name=phase::${PHASE}"
+          echo "::set-output name=cpu_limit::${CPU_LIMIT}"
+          echo "::set-output name=mem_limit::${MEM_LIMIT}"
+          echo "::set-output name=cluster_name::${CLUSTER_NAME}"
+
+      # ECS Deploy
       - name: ECS Deploy
         env:
-          PHASE: development
-          CPU_LIMIT: 512
-          MEM_LIMIT: 1024
           CONTAINER_PORT: 9090
+          CLUSTER_NAME: ${{ steps.outputs.deploy_env.cluster_name }}
+          PHASE: ${{ steps.outputs.deploy_env.phase }}
+          CPU_LIMIT: ${{ steps.outputs.deploy_env.cpu_limit }}
+          MEM_LIMIT: ${{ steps.outputs.deploy_env.mem_limit }}
           TASK_EXECUTION_ROLE_ARN: ${{ secrets.TASK_EXECUTION_ROLE_ARN }}
           TARGET_GROUP_ARN: ${{ secrets.TARGET_GROUP_ARN }}
           SSM_ARN: ${{ secrets.SSM_ARN }}
@@ -52,10 +87,12 @@ jobs:
           SECURITY_GROUP: ${{ secrets.SECURITY_GROUP }}
           IMAGE: ${{ steps.build-image.outputs.image }}
         run: |
-           ecs-cli compose --cluster nodelab-dev-fargate \
+
+           ecs-cli compose --cluster $CLUSTER_NAME \
             --project-name nodelab-api \
             service up \
             --launch-type FARGATE \
             --target-group-arn $TARGET_GROUP_ARN \
             --container-name api \
-            --container-port $CONTAINER_PORT
+            --container-port $CONTAINER_PORT \
+            --timeout 10
