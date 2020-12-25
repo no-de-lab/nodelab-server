@@ -1,4 +1,4 @@
-# Nodelab API 
+# Nodelab API
 ![Actions Status](https://github.com/no-de-lab/nodelab-server/workflows/CICD/badge.svg?branch=dev)
 ![golangci-lint](https://github.com/no-de-lab/nodelab-server/workflows/golangci-lint/badge.svg?branch=dev)
 [![codecov](https://codecov.io/gh/no-de-lab/nodelab-server/branch/dev/graph/badge.svg?token=BAEElqEtoc)](https://codecov.io/gh/no-de-lab/nodelab-server)
@@ -10,16 +10,26 @@ Nodelab API project
   - web framework
 - sqlx
   - database entity mapping
-- wire 
+- wire
   - dependency injection
 - viper
-  - manage configuration 
+  - manage configuration
 - model
   - dto & entity mapping
 
 ## Structure
 https://github.com/bxcodec/go-clean-arch
 
+## pre-commit
+Install pre-commit (https://pre-commit.com/)
+```
+brew install pre-commit
+```
+
+Run install command (project root)
+```
+pre-commit install
+```
 
 ## Setup
 ```bash
@@ -37,7 +47,7 @@ gvm install go1.15
 make run
 ```
 
-Run with docker-compose 
+Run with docker-compose
 ```
 # local database create & run with air
 $ make up
@@ -80,6 +90,6 @@ password = "test"
 [context]
 timeout = 2
 
-# etc 
+# etc
 # ...
 ```
