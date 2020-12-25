@@ -12,9 +12,10 @@ repos:
     - id: go-fmt
     - id: go-lint
     - id: go-imports
-    # validate
-    - id: validate-toml
     - id: golangci-lint
+    - id: go-cyclo
     # build
     - id: go-build
     - id: go-mod-vendor
+    # validate
+    - id: validate-toml
