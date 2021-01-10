@@ -20,10 +20,10 @@ test:
 	@go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
 
 up:
-	@docker-compose -f docker-compose.dev.yaml up
+	@docker-compose -f docker-compose.local.yaml up
 
 down:
-	@docker-compose -f docker-compose.dev.yaml down -v
+	@docker-compose -f docker-compose.local.yaml down -v
 
 build:
 	@CGO_ENABLED=0 GOOS=linux go build -o nodelabd ./cmd/...

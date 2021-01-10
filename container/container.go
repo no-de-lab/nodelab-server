@@ -2,6 +2,7 @@ package container
 
 import (
 	"github.com/no-de-lab/nodelab-server/api"
+	"github.com/no-de-lab/nodelab-server/api/healthcheck"
 	"github.com/no-de-lab/nodelab-server/config"
 	ah "github.com/no-de-lab/nodelab-server/internal/auth/delivery/http"
 	uh "github.com/no-de-lab/nodelab-server/internal/user/delivery/http"
@@ -19,10 +20,11 @@ func NewDIContainer(
 	configuration *config.Configuration,
 	userHandler *uh.UserHandler,
 	authHandler *ah.AuthHandler,
+	healthcheckHandler *healthcheck.HealthCheckHandler,
 ) *DIContainer {
 	Container = &DIContainer{
 		configuration,
-		[]api.ApiHandler{userHandler, authHandler},
+		[]api.ApiHandler{userHandler, authHandler, healthcheckHandler},
 	}
 	return Container
 }

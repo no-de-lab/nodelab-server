@@ -1,0 +1,15 @@
+version: '3'
+services:
+  api:
+    image: ${IMAGE}
+    ports:
+      - "${CONTAINER_PORT}:${CONTAINER_PORT}"
+    command: ["./nodelabd"]
+    environment:
+      - PHASE_LEVEL=${PHASE}
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: nodelab-api
+        awslogs-region: ap-northeast-2
+        awslogs-stream-prefix: nodelab-api

@@ -1,0 +1,98 @@
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+name: Deploy to Amazon ECS Development
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: nodelab-api
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - uses: marocchino/setup-ecs-cli@v1
+        with:
+          version: "v1.18.0"
+
+      # Setup deploy environment variables
+      - name: Setup deploy environment variables
+        id: deploy_env
+        env:
+          BRANCH_NAME: ${{ steps.extract_branch.outputs.branch  }}
+        run: |
+          if [ $BRANCH_NAME = 'dev' ]; then
+            CPU_LIMIT=512
+            MEM_LIMIT=1024
+            CLUSTER_NAME=nodelab-dev
+            PHASE=development
+          else
+            CPU_LIMIT=1024
+            MEM_LIMIT=2048
+            CLUSTER_NAME=nodelab
+            PHASE=production
+          fi
+
+          echo "::set-output name=phase::$PHASE"
+          echo "::set-output name=cpu_limit::$CPU_LIMIT"
+          echo "::set-output name=mem_limit::$MEM_LIMIT"
+          echo "::set-output name=cluster_name::$CLUSTER_NAME"
+
+      # ECS Deploy
+      - name: ECS Deploy
+        env:
+          CONTAINER_PORT: 9090
+          CLUSTER_NAME: ${{ steps.deploy_env.outputs.cluster_name }}
+          PHASE: ${{ steps.deploy_env.outputs.phase }}
+          CPU_LIMIT: ${{ steps.deploy_env.outputs.cpu_limit }}
+          MEM_LIMIT: ${{ steps.deploy_env.outputs.mem_limit }}
+          TASK_EXECUTION_ROLE_ARN: ${{ secrets.TASK_EXECUTION_ROLE_ARN }}
+          TARGET_GROUP_ARN: ${{ secrets.TARGET_GROUP_ARN }}
+          SSM_ARN: ${{ secrets.SSM_ARN }}
+          SUBNET_1: ${{ secrets.SUBNET_1 }}
+          SUBNET_2: ${{ secrets.SUBNET_2 }}
+          SECURITY_GROUP: ${{ secrets.SECURITY_GROUP }}
+          IMAGE: ${{ steps.build-image.outputs.image }}
+        run: |
+
+           ecs-cli compose --cluster $CLUSTER_NAME \
+            --project-name nodelab-api \
+            service up \
+            --launch-type FARGATE \
+            --target-group-arn $TARGET_GROUP_ARN \
+            --container-name api \
+            --container-port $CONTAINER_PORT \
+            --timeout 10
