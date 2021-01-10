@@ -1,0 +1,20 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v2.4.0
+  hooks:
+    - id: trailing-whitespace
+    - id: end-of-file-fixer
+    - id: check-yaml
+- repo: git://github.com/dnephin/pre-commit-golang
+  rev: master
+  hooks:
+    # Style checker
+    - id: go-fmt
+    - id: go-lint
+    - id: go-imports
+    - id: golangci-lint
+    # build
+    - id: go-build
+    - id: go-mod-vendor
+    # validate
+    - id: validate-toml
