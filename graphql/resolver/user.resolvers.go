@@ -11,7 +11,6 @@ import (
 )
 
 func (r *userResolver) Studies(ctx context.Context, obj *gqlschema.User) (*gqlschema.StudyConnection, error) {
-	fmt.Print("Test")
 	panic(fmt.Errorf("not implemented"))
 }
 
