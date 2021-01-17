@@ -13,8 +13,7 @@ repos:
     - id: go-lint
     - id: go-imports
     - id: golangci-lint
-    # build
-    - id: go-build
+    # mod
     - id: go-mod-tidy
     - id: go-mod-vendor
     # validate
