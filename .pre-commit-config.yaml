@@ -15,6 +15,7 @@ repos:
     - id: golangci-lint
     # build
     - id: go-build
+    - id: go-mod-tidy
     - id: go-mod-vendor
     # validate
     - id: validate-toml
