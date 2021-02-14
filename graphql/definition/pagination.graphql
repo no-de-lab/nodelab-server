@@ -1,0 +1,19 @@
+union Node = Study | User
+
+type PageInfo {
+  endCursor: ID!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: ID!
+}
+
+interface Edge {
+  cursor: ID!
+  node: Node!
+}
+
+interface Connection {
+  edges: [Edge!]!
+  totalCount: Int!
+  pageInfo: PageInfo!
+}

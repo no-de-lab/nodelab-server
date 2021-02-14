@@ -1,0 +1,26 @@
+interface Comment {
+  id: ID!
+  content: String!
+  author: User!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type StudyComment implements Comment {
+  id: ID!
+  content: String!
+  author: User!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type CommentEdge {
+  cursor: ID!
+  node: Comment!
+}
+
+type CommentConnection {
+  edges: [CommentEdge!]!
+  totalCount: Int!
+  pageInfo: PageInfo!
+}

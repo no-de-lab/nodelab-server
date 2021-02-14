@@ -1,0 +1,151 @@
+type Study {
+  """
+  study id 
+  """
+  id: ID!
+  """
+  카테고리 (leaf node)
+  """
+  category: Category!
+  """
+  태그 목록 
+  """
+  tags: [String!]!
+  """
+  정원 (명수)
+  """
+  limit: Int!
+  """
+  썸네일 (URL)
+  """
+  thumbnail: String!
+  """
+  제목 
+  """
+  title: String!
+  """
+  내용 (HTML)
+  """
+  content: String!
+  """
+  스터디 설명 
+  """
+  summary: String!
+  """
+  스터디 상태 (개설, 모집중, 종료)
+  """
+  status: StudyStatus!
+  """
+  스터디 기간 (일 단위)
+  """
+  duration: Int!
+  """
+  작성자 
+  """
+  author: User!
+  """
+  시작일 
+  """
+  startedAt: String!
+  """
+  study 구성원 내역
+  """
+  users: [User!]!
+  """
+  study 신청 내역 
+  author 만 열람 가능 
+  """
+  requests: [StudyRequest!]!
+  """
+  study curriculum
+  """
+  curriculums: [Curriculum!]!
+
+  """
+  TODO: param 적용
+  """
+  comments: CommentConnection!
+
+  """
+  좋아요 개수 
+  """
+  likeCount: Int!
+  
+  """
+  로그인 한 사람이 북마크 했는지 표시 
+  """
+  viewerHasBookmarked: Boolean!
+
+  createdAt: String!
+  updatedAt: String!
+}
+
+type StudyEdge implements Edge {
+  cursor: ID!
+  node: Study!
+}
+
+type StudyConnection implements Connection {
+  edges: [StudyEdge!]!
+  totalCount: Int!
+  pageInfo: PageInfo!
+}
+
+enum StudyStatus {
+  """
+  개설 (모집중)
+  """
+  OPEN
+  """
+  진행중 
+  """
+  PROGRESS
+  """
+  종료 
+  """
+  CLOSED 
+}
+
+enum StudyRequestStatus {
+  HOLD
+  APPROVED
+  REJECTED
+}
+
+type StudyRequest {
+  id: ID!
+  """
+  신청한 유저
+  """
+  user: User!
+
+  """
+  신청 승인에 대한 상태 
+  """
+  status: StudyRequestStatus!
+
+  """
+  신청할떄 보내는 내용
+  """
+  content: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Curriculum {
+  id: ID!
+  """
+  커리큘럼 아이템 
+  """
+  items: [CurriculumItem!]!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type CurriculumItem {
+  id: ID!
+  title: String!
+  content: String!
+  createdAt: String!
+  updatedAt: String!
+}

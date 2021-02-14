@@ -13,6 +13,9 @@ vendor:
 wire:
 	cd ./cmd/nodelabd && wire && cd $(ROOT)
 
+gqlgen:
+	@go run github.com/99designs/gqlgen generate
+
 run:
 	@go run ./cmd/nodelabd/main.go
 

@@ -1,0 +1,22 @@
+schema:
+  - graphql/definition/*.graphql
+
+exec:
+  filename: graphql/generated/schema_gen.go
+  package: gqlschema
+
+model:
+  filename: graphql/generated/model_gen.go
+  package: gqlschema
+
+resolver:
+  layout: follow-schema
+  dir: graphql/resolver
+  package: resolver
+
+
+models:
+  User:
+    fields:
+      studies:
+        resolver: true

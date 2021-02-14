@@ -8,13 +8,22 @@ import (
 	"github.com/no-de-lab/nodelab-server/config"
 	"github.com/no-de-lab/nodelab-server/container"
 	"github.com/no-de-lab/nodelab-server/db"
+	"github.com/no-de-lab/nodelab-server/graphql/resolver"
 	"github.com/no-de-lab/nodelab-server/internal/auth"
 	"github.com/no-de-lab/nodelab-server/internal/user"
 )
 
-var MainSet = wire.NewSet(healthcheck.NewHealthCheckHandler, auth.AuthSet, user.UserSet, config.LoadConfig, db.NewDatabase, container.NewDIContainer)
+// MainSet all instance set (service, resolver, handler ... etc)
+var MainSet = wire.NewSet(healthcheck.NewHealthCheckHandler, auth.AuthSet, user.UserSet, config.LoadConfig, db.NewDatabase, container.NewDIContainer, resolver.NewResolver)
 
+// InitializeDIContainer return instance bean container
 func InitializeDIContainer() *container.DIContainer {
+	wire.Build(MainSet)
+	return nil
+}
+
+// InitializeResolver return root resolver
+func InitializeResolver() *resolver.Resolver {
 	wire.Build(MainSet)
 	return nil
 }

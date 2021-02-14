@@ -1,0 +1,28 @@
+type User {
+  id: ID!
+  email: String!
+  username: String!
+  intro: String
+  githubUrl: String
+  """
+  포지션 
+  """
+  position: String
+  """
+  관심사 
+  """
+  interest: String
+
+  profileImage: String
+  """
+  유저 스터디 목록 
+  """
+  studies: StudyConnection!
+  """
+  로그인한 유저인지 판별
+  """
+  isViewer: Boolean!
+
+  createdAt: String!
+  updatedAt: String!
+}

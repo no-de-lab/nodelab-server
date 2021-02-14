@@ -1,0 +1,21 @@
+
+type Query {
+  """
+  TODO: param 적용
+  """
+  studies: StudyConnection!
+  """
+  study queries
+  """
+  study(id: ID!): Study!
+
+
+  """
+  user queries
+  """
+  user(id: ID!): User!
+  """
+  로그인 후 내정보 호출 query 
+  """
+  me: User!
+}
