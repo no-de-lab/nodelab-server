@@ -3,22 +3,25 @@
 ![golangci-lint](https://github.com/no-de-lab/nodelab-server/workflows/golangci-lint/badge.svg?branch=dev)
 [![codecov](https://codecov.io/gh/no-de-lab/nodelab-server/branch/dev/graph/badge.svg?token=BAEElqEtoc)](https://codecov.io/gh/no-de-lab/nodelab-server)
 
-Nodelab API project
-
+## Tech stack
+- Golang
+- MySQL 
+- AWS ECS
+- GraphQL
 ## Core dependency
-- gorilla mux
-  - web framework
-- sqlx
-  - database entity mapping
-- wire
-  - dependency injection
-- viper
-  - manage configuration
+- [echo](https://github.com/labstack/echo) 
+  - Web framework
+- [sqlx](https://github.com/jmoiron/sqlx)
+  - Database entity mapping
+- [wire](https://github.com/google/wire)
+  - Dependency injection
+- [viper](https://github.com/spf13/viper)
+  - Manage configuration
 - model
-  - dto & entity mapping
+  - DTO & entity mapping
 
 ## Structure
-https://github.com/bxcodec/go-clean-arch
+- Inspired from https://github.com/bxcodec/go-clean-arch
 
 ## pre-commit
 Install pre-commit (https://pre-commit.com/)
@@ -93,3 +96,23 @@ timeout = 2
 # etc
 # ...
 ```
+
+## Appendix
+## Design and Planning Docs
+- [Figma](https://www.figma.com/file/wSDzlnpDbM5B3yigiVYbgX/1127_nodelab_wireframe_%EC%8A%A4%ED%81%AC%EB%9F%BC?node-id=275%3A887)
+- [Google Docs](https://docs.google.com/spreadsheets/d/1tkgqKZP7wX2VGBmsYFr--c4LLsIzV3mR5X0P80Gb9nc/edit#gid=0)
+### Workflow
+- Choose an issue to work on from [server project board](https://github.com/orgs/no-de-lab/projects/1)
+- Create a branch `#issue/short_description_of_issue` from `dev` branch
+- Work on branch and make a PR (PR review is required)
+- If no review is received within 2 days, you are free to merge to dev
+
+### Semantic Commit messages
+- feat: :zap: 새로운 기능 (issue 번호 달 것)
+- fix: :bug: 버그 수정
+- refactor: :hammer: 기능을 추가하지 않는 코드 변경
+- chore: :package: src 또는 테스트 파일을 수정하지 않는 기타 변경 사항
+- docs: :books: 문서만 변경
+- style: :shirt: 코드의 의미에 영향을 미치지 않는 변경 사항 (공백, 서식, 누락 된 세미콜론 등)
+- test: :rotating_light: 테스트 케이스 추가
+- deploy: :rocket:
