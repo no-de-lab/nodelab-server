@@ -103,7 +103,7 @@ timeout = 2
 - [Google Docs](https://docs.google.com/spreadsheets/d/1tkgqKZP7wX2VGBmsYFr--c4LLsIzV3mR5X0P80Gb9nc/edit#gid=0)
 ### Workflow
 - Choose an issue to work on from [server project board](https://github.com/no-de-lab/nodelab-server/projects/1)
-- Create a branch `#issue/short_description_of_issue` from `dev` branch
+- Create a branch `type/#issue/short_description_of_issue` from `dev` branch
 - Work on branch and make a PR (PR review is required)
 - If no review is received within 2 days, you are free to merge to dev
 
