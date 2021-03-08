@@ -5,11 +5,11 @@
 
 ## Tech stack
 - Golang
-- MySQL 
+- MySQL
 - AWS ECS
 - GraphQL
 ## Core dependency
-- [echo](https://github.com/labstack/echo) 
+- [echo](https://github.com/labstack/echo)
   - Web framework
 - [sqlx](https://github.com/jmoiron/sqlx)
   - Database entity mapping
@@ -116,3 +116,8 @@ timeout = 2
 - style: :shirt: 코드의 의미에 영향을 미치지 않는 변경 사항 (공백, 서식, 누락 된 세미콜론 등)
 - test: :rotating_light: 테스트 케이스 추가
 - deploy: :rocket:
+
+### Database Schema
+- AQuery
+  - https://aquerytool.com/aquerymain/index/?rurl=1f2c286f-0517-43d9-a8a7-c5b843bf7b6c&
+- 5ap514
