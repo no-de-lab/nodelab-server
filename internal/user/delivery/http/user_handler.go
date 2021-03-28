@@ -1,13 +1,14 @@
 package http
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/labstack/echo/v4"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
 	userError "github.com/no-de-lab/nodelab-server/internal/user/error"
 	um "github.com/no-de-lab/nodelab-server/internal/user/model"
 	"gopkg.in/jeevatkm/go-model.v1"
-	"net/http"
-	"strconv"
 )
 
 type UserHandler struct {

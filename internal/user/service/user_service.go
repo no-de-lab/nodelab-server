@@ -2,11 +2,12 @@ package service
 
 import (
 	"context"
+	"time"
+
 	"github.com/no-de-lab/nodelab-server/config"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
 	um "github.com/no-de-lab/nodelab-server/internal/user/model"
 	"gopkg.in/jeevatkm/go-model.v1"
-	"time"
 )
 
 type userService struct {

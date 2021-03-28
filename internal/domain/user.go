@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+
 	"github.com/no-de-lab/nodelab-server/internal/user/model"
 	"gopkg.in/guregu/null.v4"
 )

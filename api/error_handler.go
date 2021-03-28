@@ -1,10 +1,11 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	e "github.com/no-de-lab/nodelab-server/error"
 	log "github.com/sirupsen/logrus"
-	"net/http"
 )
 
 func ErrorHandler(err error, c echo.Context) {

@@ -2,11 +2,12 @@ package http
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	e "github.com/no-de-lab/nodelab-server/internal/auth/error"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
 	"github.com/no-de-lab/nodelab-server/internal/user/model"
-	"net/http"
 )
 
 type AuthHandler struct {
