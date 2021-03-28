@@ -1,14 +1,18 @@
 # Nodelab API
+
 ![Actions Status](https://github.com/no-de-lab/nodelab-server/workflows/CICD/badge.svg?branch=dev)
 ![golangci-lint](https://github.com/no-de-lab/nodelab-server/workflows/golangci-lint/badge.svg?branch=dev)
 [![codecov](https://codecov.io/gh/no-de-lab/nodelab-server/branch/dev/graph/badge.svg?token=BAEElqEtoc)](https://codecov.io/gh/no-de-lab/nodelab-server)
 
 ## Tech stack
+
 - Golang
 - MySQL
 - AWS ECS
 - GraphQL
+
 ## Core dependency
+
 - [echo](https://github.com/labstack/echo)
   - Web framework
 - [sqlx](https://github.com/jmoiron/sqlx)
@@ -21,20 +25,25 @@
   - DTO & entity mapping
 
 ## Structure
+
 - Inspired from https://github.com/bxcodec/go-clean-arch
 
 ## pre-commit
+
 Install pre-commit (https://pre-commit.com/)
+
 ```
 brew install pre-commit
 ```
 
 Run install command (project root)
+
 ```
 pre-commit install
 ```
 
 ## Setup
+
 ```bash
 # install go1.15
 bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
@@ -51,6 +60,7 @@ make run
 ```
 
 Run with docker-compose
+
 ```
 # local database create & run with air
 $ make up
@@ -59,8 +69,8 @@ $ make up
 $ make down
 ```
 
-
 ## Make command
+
 - test
   - run all test
 - run
@@ -79,8 +89,8 @@ $ make down
 - build-air
   - build for air
 
-
 ## App Configuration
+
 ```toml
 # for db connection
 [database]
@@ -98,16 +108,21 @@ timeout = 2
 ```
 
 ## Appendix
+
 ## Design and Planning Docs
+
 - [Figma](https://www.figma.com/file/wSDzlnpDbM5B3yigiVYbgX/1127_nodelab_wireframe_%EC%8A%A4%ED%81%AC%EB%9F%BC?node-id=275%3A887)
 - [Google Docs](https://docs.google.com/spreadsheets/d/1tkgqKZP7wX2VGBmsYFr--c4LLsIzV3mR5X0P80Gb9nc/edit#gid=0)
+
 ### Workflow
+
 - Choose an issue to work on from [server project board](https://github.com/no-de-lab/nodelab-server/projects/1)
 - Create a branch `type/#issue/short_description_of_issue` from `dev` branch
 - Work on branch and make a PR (PR review is required)
 - If no review is received within 2 days, you are free to merge to dev
 
 ### Semantic Commit messages
+
 - feat: :zap: 새로운 기능 (issue 번호 달 것)
 - fix: :bug: 버그 수정
 - refactor: :hammer: 기능을 추가하지 않는 코드 변경
@@ -118,6 +133,7 @@ timeout = 2
 - deploy: :rocket:
 
 ### Database Schema
+
 - AQuery
   - https://aquerytool.com/aquerymain/index/?rurl=1f2c286f-0517-43d9-a8a7-c5b843bf7b6c&
-- 5ap514
+  - password: 5ap514
