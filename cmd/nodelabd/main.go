@@ -23,7 +23,9 @@ func main() {
 	logger.InitLogging()
 
 	e := echo.New()
-	e.Use(middleware.Logger())
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "${time_rfc3339} ${method} ${uri} ${status}     ${latency_human}\n",
+	}))
 	e.Use(middleware.Recover())
 	e.HTTPErrorHandler = api.ErrorHandler
 
