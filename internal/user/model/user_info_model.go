@@ -3,7 +3,7 @@ package model
 import "gopkg.in/guregu/null.v4"
 
 type UserInfoModel struct {
-	Id              int64       `json:"id"`
+	ID              int64       `json:"id"`
 	Email           string      `json:"email"`
 	Username        string      `json:"username"`
 	Intro           null.String `json:"intro"`
