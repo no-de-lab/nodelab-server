@@ -157,7 +157,7 @@ type User struct {
 	Interest     *string `json:"interest"`
 	ProfileImage *string `json:"profileImage"`
 	// 유저 스터디 목록
-	Studies *StudyConnection `json:"studies"`
+	Studies []*StudyConnection `json:"studies"`
 	// 로그인한 유저인지 판별
 	IsViewer  bool   `json:"isViewer"`
 	CreatedAt string `json:"createdAt"`
