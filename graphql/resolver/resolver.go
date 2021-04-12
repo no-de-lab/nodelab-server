@@ -1,6 +1,9 @@
 package resolver
 
-import "github.com/no-de-lab/nodelab-server/internal/user/delivery/graphql"
+import (
+	ag "github.com/no-de-lab/nodelab-server/internal/auth/delivery/graphql"
+	ug "github.com/no-de-lab/nodelab-server/internal/user/delivery/graphql"
+)
 
 // This file will not be regenerated automatically.
 //
@@ -8,14 +11,17 @@ import "github.com/no-de-lab/nodelab-server/internal/user/delivery/graphql"
 
 // Resolver a root resolver
 type Resolver struct {
-	ur *graphql.UserResolver
+	ur *ug.UserResolver
+	ar *ag.AuthResolver
 }
 
 // NewResolver return new root resolver instance
 func NewResolver(
-	userResolver *graphql.UserResolver,
+	userResolver *ug.UserResolver,
+	authResolver *ag.AuthResolver,
 ) *Resolver {
 	return &Resolver{
 		ur: userResolver,
+		ar: authResolver,
 	}
 }

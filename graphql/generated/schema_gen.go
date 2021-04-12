@@ -44,6 +44,11 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	Auth struct {
+		Email func(childComplexity int) int
+		Token func(childComplexity int) int
+	}
+
 	Category struct {
 		Children func(childComplexity int) int
 		ID       func(childComplexity int) int
@@ -162,7 +167,7 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	SignupEmail(ctx context.Context, email string, password string) (*User, error)
+	SignupEmail(ctx context.Context, email string, password string) (*Auth, error)
 }
 type QueryResolver interface {
 	Studies(ctx context.Context) (*StudyConnection, error)
@@ -171,7 +176,7 @@ type QueryResolver interface {
 	Me(ctx context.Context) (*User, error)
 }
 type UserResolver interface {
-	Studies(ctx context.Context, obj *User) ([]*StudyConnection, error)
+	Studies(ctx context.Context, obj *User) (*StudyConnection, error)
 }
 
 type executableSchema struct {
@@ -188,6 +193,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Auth.email":
+		if e.complexity.Auth.Email == nil {
+			break
+		}
+
+		return e.complexity.Auth.Email(childComplexity), true
+
+	case "Auth.token":
+		if e.complexity.Auth.Token == nil {
+			break
+		}
+
+		return e.complexity.Auth.Token(childComplexity), true
 
 	case "Category.children":
 		if e.complexity.Category.Children == nil {
@@ -786,6 +805,11 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
+	{Name: "graphql/definition/auth.graphql", Input: `type Auth {
+  email: String!
+  token: String!
+}
+`, BuiltIn: false},
 	{Name: "graphql/definition/category.graphql", Input: `type Category {
   id: String!
   name: String!
@@ -820,7 +844,7 @@ type CommentConnection {
 }
 `, BuiltIn: false},
 	{Name: "graphql/definition/mutation.graphql", Input: `type Mutation {
-  signupEmail(email: String!, password: String!): User!
+  signupEmail(email: String!, password: String!): Auth!
 }
 `, BuiltIn: false},
 	{Name: "graphql/definition/pagination.graphql", Input: `union Node = Study | User
@@ -860,14 +884,14 @@ type Query {
   """
   user(id: ID!): User!
   """
-  로그인 후 내정보 호출 query
+  로그인 후 내정보 호출 query 
   """
   me: User!
 }
 `, BuiltIn: false},
 	{Name: "graphql/definition/study.graphql", Input: `type Study {
   """
-  study id
+  study id 
   """
   id: ID!
   """
@@ -875,7 +899,7 @@ type Query {
   """
   category: Category!
   """
-  태그 목록
+  태그 목록 
   """
   tags: [String!]!
   """
@@ -887,7 +911,7 @@ type Query {
   """
   thumbnail: String!
   """
-  제목
+  제목 
   """
   title: String!
   """
@@ -895,7 +919,7 @@ type Query {
   """
   content: String!
   """
-  스터디 설명
+  스터디 설명 
   """
   summary: String!
   """
@@ -907,11 +931,11 @@ type Query {
   """
   duration: Int!
   """
-  작성자
+  작성자 
   """
   author: User!
   """
-  시작일
+  시작일 
   """
   startedAt: String!
   """
@@ -919,8 +943,8 @@ type Query {
   """
   users: [User!]!
   """
-  study 신청 내역
-  author 만 열람 가능
+  study 신청 내역 
+  author 만 열람 가능 
   """
   requests: [StudyRequest!]!
   """
@@ -934,12 +958,12 @@ type Query {
   comments: CommentConnection!
 
   """
-  좋아요 개수
+  좋아요 개수 
   """
   likeCount: Int!
-
+  
   """
-  로그인 한 사람이 북마크 했는지 표시
+  로그인 한 사람이 북마크 했는지 표시 
   """
   viewerHasBookmarked: Boolean!
 
@@ -964,13 +988,13 @@ enum StudyStatus {
   """
   OPEN
   """
-  진행중
+  진행중 
   """
   PROGRESS
   """
-  종료
+  종료 
   """
-  CLOSED
+  CLOSED 
 }
 
 enum StudyRequestStatus {
@@ -987,7 +1011,7 @@ type StudyRequest {
   user: User!
 
   """
-  신청 승인에 대한 상태
+  신청 승인에 대한 상태 
   """
   status: StudyRequestStatus!
 
@@ -1002,7 +1026,7 @@ type StudyRequest {
 type Curriculum {
   id: ID!
   """
-  커리큘럼 아이템
+  커리큘럼 아이템 
   """
   items: [CurriculumItem!]!
   createdAt: String!
@@ -1024,19 +1048,19 @@ type CurriculumItem {
   intro: String
   githubUrl: String
   """
-  포지션
+  포지션 
   """
   position: String
   """
-  관심사
+  관심사 
   """
   interest: String
 
   profileImage: String
   """
-  유저 스터디 목록
+  유저 스터디 목록 
   """
-  studies: [StudyConnection!]!
+  studies: StudyConnection!
   """
   로그인한 유저인지 판별
   """
@@ -1159,6 +1183,76 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _Auth_email(ctx context.Context, field graphql.CollectedField, obj *Auth) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Auth",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Email, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Auth_token(ctx context.Context, field graphql.CollectedField, obj *Auth) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Auth",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Token, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
 
 func (ec *executionContext) _Category_id(ctx context.Context, field graphql.CollectedField, obj *Category) (ret graphql.Marshaler) {
 	defer func() {
@@ -1792,9 +1886,9 @@ func (ec *executionContext) _Mutation_signupEmail(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*User)
+	res := resTmp.(*Auth)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐUser(ctx, field.Selections, res)
+	return ec.marshalNAuth2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐAuth(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graphql.CollectedField, obj *PageInfo) (ret graphql.Marshaler) {
@@ -3717,9 +3811,9 @@ func (ec *executionContext) _User_studies(ctx context.Context, field graphql.Col
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*StudyConnection)
+	res := resTmp.(*StudyConnection)
 	fc.Result = res
-	return ec.marshalNStudyConnection2ᚕᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐStudyConnectionᚄ(ctx, field.Selections, res)
+	return ec.marshalNStudyConnection2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐStudyConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_isViewer(ctx context.Context, field graphql.CollectedField, obj *User) (ret graphql.Marshaler) {
@@ -4993,6 +5087,38 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 
 // region    **************************** object.gotpl ****************************
 
+var authImplementors = []string{"Auth"}
+
+func (ec *executionContext) _Auth(ctx context.Context, sel ast.SelectionSet, obj *Auth) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, authImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Auth")
+		case "email":
+			out.Values[i] = ec._Auth_email(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "token":
+			out.Values[i] = ec._Auth_token(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var categoryImplementors = []string{"Category"}
 
 func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet, obj *Category) graphql.Marshaler {
@@ -5958,6 +6084,20 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) marshalNAuth2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐAuth(ctx context.Context, sel ast.SelectionSet, v Auth) graphql.Marshaler {
+	return ec._Auth(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNAuth2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐAuth(ctx context.Context, sel ast.SelectionSet, v *Auth) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Auth(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6282,43 +6422,6 @@ func (ec *executionContext) marshalNStudy2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnode
 
 func (ec *executionContext) marshalNStudyConnection2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐStudyConnection(ctx context.Context, sel ast.SelectionSet, v StudyConnection) graphql.Marshaler {
 	return ec._StudyConnection(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNStudyConnection2ᚕᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐStudyConnectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*StudyConnection) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNStudyConnection2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐStudyConnection(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-	return ret
 }
 
 func (ec *executionContext) marshalNStudyConnection2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐStudyConnection(ctx context.Context, sel ast.SelectionSet, v *StudyConnection) graphql.Marshaler {

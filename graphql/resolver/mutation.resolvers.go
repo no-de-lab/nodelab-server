@@ -9,8 +9,8 @@ import (
 	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
 )
 
-func (r *mutationResolver) SignupEmail(ctx context.Context, email string, password string) (*gqlschema.User, error) {
-	return r.ur.SignupEmail(ctx, email, password)
+func (r *mutationResolver) SignupEmail(ctx context.Context, email string, password string) (*gqlschema.Auth, error) {
+	return r.ar.SignupEmail(ctx, email, password)
 }
 
 // Mutation returns gqlschema.MutationResolver implementation.
