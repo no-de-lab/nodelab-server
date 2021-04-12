@@ -6,7 +6,6 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
-	userError "github.com/no-de-lab/nodelab-server/internal/user/error"
 	um "github.com/no-de-lab/nodelab-server/internal/user/model"
 	"gopkg.in/jeevatkm/go-model.v1"
 )
@@ -42,7 +41,8 @@ func (h *UserHandler) GetUserInfo(c echo.Context) error {
 	}
 
 	if user == nil {
-		return userError.ErrUserNotFound
+		// return userError.ErrUserNotFound
+		return nil
 	}
 
 	errs := model.Copy(&userInfo, user)
