@@ -14,7 +14,7 @@ import (
 )
 
 // MainSet all instance set (service, resolver, handler ... etc)
-var MainSet = wire.NewSet(healthcheck.NewHealthCheckHandler, auth.AuthSet, user.UserSet, config.LoadConfig, db.NewDatabase, container.NewDIContainer, resolver.NewResolver)
+var MainSet = wire.NewSet(healthcheck.NewHealthCheckHandler, config.LoadConfig, db.NewDatabase, auth.AuthSet, user.UserSet, container.NewDIContainer, resolver.NewResolver)
 
 // InitializeDIContainer return instance bean container
 func InitializeDIContainer() *container.DIContainer {

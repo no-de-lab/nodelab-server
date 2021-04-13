@@ -18,6 +18,7 @@ import (
 	"github.com/no-de-lab/nodelab-server/internal/auth/model"
 	repository2 "github.com/no-de-lab/nodelab-server/internal/auth/repository"
 	service2 "github.com/no-de-lab/nodelab-server/internal/auth/service"
+	"github.com/no-de-lab/nodelab-server/internal/auth/util"
 	"github.com/no-de-lab/nodelab-server/internal/user"
 	"github.com/no-de-lab/nodelab-server/internal/user/delivery/graphql"
 	"github.com/no-de-lab/nodelab-server/internal/user/delivery/http"
@@ -48,9 +49,10 @@ func InitializeResolver() *resolver.Resolver {
 	userRepository := repository.NewUserRepository(sqlxDB)
 	userService := service.NewUserService(userRepository, configuration)
 	userResolver := graphql.NewUserResolver(validate, userService)
+	jwtMaker := util.NewJWTMaker(configuration)
 	authRepository := repository2.NewAuthRepository(sqlxDB)
 	authService := service2.NewAuthService(userService, authRepository)
-	authResolver := graphql2.NewAuthResolver(validate, authService)
+	authResolver := graphql2.NewAuthResolver(validate, jwtMaker, authService)
 	resolverResolver := resolver.NewResolver(userResolver, authResolver)
 	return resolverResolver
 }
@@ -58,4 +60,4 @@ func InitializeResolver() *resolver.Resolver {
 // wire.go:
 
 // MainSet all instance set (service, resolver, handler ... etc)
-var MainSet = wire.NewSet(healthcheck.NewHealthCheckHandler, auth.AuthSet, user.UserSet, config.LoadConfig, db.NewDatabase, container.NewDIContainer, resolver.NewResolver)
+var MainSet = wire.NewSet(healthcheck.NewHealthCheckHandler, config.LoadConfig, db.NewDatabase, auth.AuthSet, user.UserSet, container.NewDIContainer, resolver.NewResolver)
