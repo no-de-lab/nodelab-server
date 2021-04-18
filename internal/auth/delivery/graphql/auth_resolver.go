@@ -9,7 +9,6 @@ import (
 	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
 	ae "github.com/no-de-lab/nodelab-server/internal/auth/error"
 	am "github.com/no-de-lab/nodelab-server/internal/auth/model"
-	"github.com/no-de-lab/nodelab-server/internal/auth/util"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/guregu/null.v4"
@@ -18,16 +17,14 @@ import (
 // AuthResolver auth resolver for graphql
 type AuthResolver struct {
 	Validator   validator.Validate
-	JWTMaker    util.JWTMaker
 	AuthService domain.AuthService
 }
 
 // NewAuthResolver return new auth resolver instance
-func NewAuthResolver(validator validator.Validate, jwtMaker util.JWTMaker, authService domain.AuthService) *AuthResolver {
+func NewAuthResolver(validator validator.Validate, authService domain.AuthService) *AuthResolver {
 	return &AuthResolver{
 		Validator:   validator,
 		AuthService: authService,
-		JWTMaker:    jwtMaker,
 	}
 }
 
@@ -50,7 +47,7 @@ func (ar *AuthResolver) SignupEmail(ctx context.Context, email, password string)
 		return nil, ae.NewGraphqlError(ctx, err.Error(), 0)
 	}
 
-	token, err := ar.JWTMaker.CreateToken(email, 168*time.Hour)
+	token, err := ar.AuthService.CreateToken(email, 168*time.Hour)
 	if err != nil {
 		log.WithError(err).Errorf("Failed to create JWT token")
 		return nil, ae.NewGraphqlError(ctx, err.Error(), http.StatusInternalServerError)

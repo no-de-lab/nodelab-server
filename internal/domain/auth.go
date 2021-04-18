@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"time"
 
 	am "github.com/no-de-lab/nodelab-server/internal/auth/model"
 	"gopkg.in/guregu/null.v4"
@@ -29,4 +30,5 @@ type AuthService interface {
 	SignupSocial(ctx context.Context, user *am.SignupSocialModel) error
 	// TODO: add detail
 	SocialLogin() error
+	CreateToken(email string, duration time.Duration) (string, error)
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	errors "github.com/no-de-lab/nodelab-server/error"
 	am "github.com/no-de-lab/nodelab-server/internal/auth/model"
@@ -16,13 +17,15 @@ import (
 
 // AuthService business logic for auth
 type AuthService struct {
+	jwtMaker       util.JWTMaker
 	userService    domain.UserService
 	authRepository domain.AuthRepository
 }
 
 // NewAuthService return new AuthService instance
-func NewAuthService(userService domain.UserService, authRepository domain.AuthRepository) domain.AuthService {
+func NewAuthService(jwtMaker util.JWTMaker, userService domain.UserService, authRepository domain.AuthRepository) domain.AuthService {
 	return &AuthService{
+		jwtMaker,
 		userService,
 		authRepository,
 	}
@@ -72,4 +75,9 @@ func (as *AuthService) SignupEmail(ctx context.Context, user *am.SignupEmailMode
 // SocialLogin signup or login for social user
 func (a *AuthService) SocialLogin() error {
 	return nil
+}
+
+// CreateToken creates a token with email and duration
+func (a *AuthService) CreateToken(email string, duration time.Duration) (string, error) {
+	return a.jwtMaker.CreateToken(email, duration)
 }
