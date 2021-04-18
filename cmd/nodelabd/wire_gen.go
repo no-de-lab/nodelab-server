@@ -34,8 +34,9 @@ func InitializeDIContainer() *container.DIContainer {
 	userRepository := repository.NewUserRepository(sqlxDB)
 	userService := service.NewUserService(userRepository, configuration)
 	userHandler := http.NewUserHandler(userService)
+	jwtMaker := util.NewJWTMaker(configuration)
 	authRepository := repository2.NewAuthRepository(sqlxDB)
-	authService := service2.NewAuthService(userService, authRepository)
+	authService := service2.NewAuthService(jwtMaker, userService, authRepository)
 	authHandler := http2.NewAuthHandler(authService)
 	healthCheckHandler := healthcheck.NewHealthCheckHandler()
 	diContainer := container.NewDIContainer(configuration, userHandler, authHandler, healthCheckHandler)
@@ -51,8 +52,8 @@ func InitializeResolver() *resolver.Resolver {
 	userResolver := graphql.NewUserResolver(validate, userService)
 	jwtMaker := util.NewJWTMaker(configuration)
 	authRepository := repository2.NewAuthRepository(sqlxDB)
-	authService := service2.NewAuthService(userService, authRepository)
-	authResolver := graphql2.NewAuthResolver(validate, jwtMaker, authService)
+	authService := service2.NewAuthService(jwtMaker, userService, authRepository)
+	authResolver := graphql2.NewAuthResolver(validate, authService)
 	resolverResolver := resolver.NewResolver(userResolver, authResolver)
 	return resolverResolver
 }
