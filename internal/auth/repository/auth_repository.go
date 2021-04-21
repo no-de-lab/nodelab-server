@@ -21,7 +21,7 @@ func NewAuthRepository(db *sqlx.DB) domain.AuthRepository {
 
 func (r *authRepository) FindAccountByEmail(ctx context.Context, email string) (*domain.UserAccount, error) {
 	u := domain.UserAccount{}
-	err := r.DB.GetContext(ctx, &u, FindAccountByEmailQuery, email)
+	err := r.DB.GetContext(ctx, &u, findAccountByEmailQuery, email)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
@@ -36,7 +36,7 @@ func (r *authRepository) FindAccountByEmail(ctx context.Context, email string) (
 
 // CreateUserByEmail creates user by email
 func (r *authRepository) CreateUserByEmail(context context.Context, user *domain.UserAccount) error {
-	_, err := r.DB.NamedExecContext(context, CreateUserByEmailQuery, user)
+	_, err := r.DB.NamedExecContext(context, createUserByEmailQuery, user)
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func (r *authRepository) CreateUserByEmail(context context.Context, user *domain
 
 // CreateUserBySocial creates user by social account
 func (r *authRepository) CreateUserBySocial(context context.Context, user *domain.UserAccount) error {
-	_, err := r.DB.NamedExecContext(context, CreateUserBySocialQuery, user)
+	_, err := r.DB.NamedExecContext(context, createUserBySocialQuery, user)
 	if err != nil {
 		return err
 	}
