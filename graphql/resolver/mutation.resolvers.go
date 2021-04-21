@@ -5,12 +5,17 @@ package resolver
 
 import (
 	"context"
+	"fmt"
 
 	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
 )
 
 func (r *mutationResolver) SignupEmail(ctx context.Context, email string, password string) (*gqlschema.Auth, error) {
 	return r.ar.SignupEmail(ctx, email, password)
+}
+
+func (r *mutationResolver) LoginEmail(ctx context.Context, email string, password string) (*gqlschema.Auth, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Mutation returns gqlschema.MutationResolver implementation.
