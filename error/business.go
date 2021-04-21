@@ -3,13 +3,13 @@ package error
 type BusinessError struct {
 	Message    string `json:"message"`
 	Internal   error  `json:"-"`
-	StatusCode int    `json:"-"`
+	StatusCode int    `json:"statusCode"`
 }
 
 type InternalError struct {
 	Message    string `json:"message"`
 	Internal   error  `json:"-"`
-	StatusCode int    `json:"-"`
+	StatusCode int    `json:"statusCode"`
 }
 
 func NewBusinessError(message string, err error, statusCode int) *BusinessError {
