@@ -73,16 +73,35 @@ func (as *AuthService) SignupEmail(ctx context.Context, user *am.SignupEmailMode
 }
 
 // LoginSocial logins social user
-func (a *AuthService) LoginSocial() error {
-	return nil
+func (as *AuthService) LoginSocial(ctx context.Context, email string) (string, error) {
+	return "", nil
 }
 
-// LoginEmail logins email user
-func (a *AuthService) LoginEmail() error {
-	return nil
+// LoginEmail logins email user and returns token
+func (as *AuthService) LoginEmail(ctx context.Context, email, password string) (string, error) {
+	user, err := as.authRepository.FindAccountByEmail(ctx, email)
+	if err != nil {
+		return "", err
+	}
+
+	if user == nil {
+		return "", err
+	}
+
+	err = util.CheckPassword(password, user.Password.String)
+	if err != nil {
+		return "", err
+	}
+
+	token, err := as.jwtMaker.CreateToken(email, 168*time.Hour)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
 
 // CreateToken creates a token with email and duration
-func (a *AuthService) CreateToken(email string, duration time.Duration) (string, error) {
-	return a.jwtMaker.CreateToken(email, duration)
+func (as *AuthService) CreateToken(email string, duration time.Duration) (string, error) {
+	return as.jwtMaker.CreateToken(email, duration)
 }

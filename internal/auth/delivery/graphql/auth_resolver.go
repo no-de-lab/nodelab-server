@@ -62,5 +62,16 @@ func (ar *AuthResolver) SignupEmail(ctx context.Context, email, password string)
 
 // LoginEmail logins the user by email
 func (ar *AuthResolver) LoginEmail(ctx context.Context, email, password string) (*gqlschema.Auth, error) {
-	return nil, nil
+	token, err := ar.AuthService.LoginEmail(ctx, email, password)
+	if err != nil {
+		log.Error(err)
+		return nil, ae.NewGraphqlError(ctx, err.Error(), http.StatusBadRequest)
+	}
+
+	gqlAuth := gqlschema.Auth{
+		Email: email,
+		Token: token,
+	}
+
+	return &gqlAuth, nil
 }

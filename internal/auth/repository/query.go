@@ -1,7 +1,7 @@
 package repository
 
 const (
-	findAccountByEmailQuery = `SELECT email FROM account WHERE email = ?`
+	findAccountByEmailQuery = `SELECT email, password FROM account WHERE email = ?`
 	createUserByEmailQuery  = `
 	INSERT INTO account(email, password, created_at, updated_at)
 	VALUES (:email, :password, now(), now())`
