@@ -3,7 +3,6 @@ package graphql
 import (
 	"context"
 	"net/http"
-	"time"
 
 	"github.com/go-playground/validator"
 	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
@@ -41,16 +40,10 @@ func (ar *AuthResolver) SignupEmail(ctx context.Context, email, password string)
 		return nil, ae.NewGraphqlError(ctx, err.Error(), http.StatusBadRequest)
 	}
 
-	err = ar.AuthService.SignupEmail(ctx, signupModel)
+	token, err := ar.AuthService.SignupEmail(ctx, signupModel)
 	if err != nil {
 		log.WithError(err).Errorf("Failed to create user by email, password")
 		return nil, ae.NewGraphqlError(ctx, err.Error(), 0)
-	}
-
-	token, err := ar.AuthService.CreateToken(email, 168*time.Hour)
-	if err != nil {
-		log.WithError(err).Errorf("Failed to create JWT token")
-		return nil, ae.NewGraphqlError(ctx, err.Error(), http.StatusInternalServerError)
 	}
 
 	var gqlAuth gqlschema.Auth

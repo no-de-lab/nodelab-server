@@ -37,39 +37,44 @@ func (as *AuthService) Login(ctx context.Context, form *am.LoginModel) (err erro
 }
 
 // SignupSocial signup a user by social account
-func (as *AuthService) SignupSocial(ctx context.Context, user *am.SignupSocialModel) error {
-	return nil
+func (as *AuthService) SignupSocial(ctx context.Context, user *am.SignupSocialModel) (string, error) {
+	return "", nil
 }
 
 // SignupEmail signup a user by email and password
-func (as *AuthService) SignupEmail(ctx context.Context, user *am.SignupEmailModel) error {
+func (as *AuthService) SignupEmail(ctx context.Context, user *am.SignupEmailModel) (string, error) {
 	userAcc, err := as.authRepository.FindAccountByEmail(ctx, user.Email)
 	if userAcc != nil {
-		return errors.NewBusinessError("User already exists", fmt.Errorf("User already exists"), http.StatusConflict)
+		return "", errors.NewBusinessError("User already exists", fmt.Errorf("User already exists"), http.StatusConflict)
 	}
 
 	if err != nil {
-		return errors.NewInternalError("Failed to create user", err, http.StatusInternalServerError)
+		return "", errors.NewInternalError("Failed to create user", err, http.StatusInternalServerError)
 	}
 
 	var userAccountModel domain.UserAccount
 	errs := model.Copy(&userAccountModel, user)
 	if errs != nil {
-		return errors.NewInternalError("Failed to copy account model", errs[0], http.StatusInternalServerError)
+		return "", errors.NewInternalError("Failed to copy account model", errs[0], http.StatusInternalServerError)
 	}
 
 	hashedPassword, err := util.HashedPassword(user.Password.String)
 	if err != nil {
-		return errors.NewInternalError("Failed to has password", err, http.StatusInternalServerError)
+		return "", errors.NewInternalError("Failed to has password", err, http.StatusInternalServerError)
 	}
 	userAccountModel.Password = null.NewString(hashedPassword, true)
 
 	err = as.authRepository.CreateUserByEmail(ctx, &userAccountModel)
 	if err != nil {
-		return errors.NewInternalError("Failed to create user in DB", err, http.StatusInternalServerError)
+		return "", errors.NewInternalError("Failed to create user in DB", err, http.StatusInternalServerError)
 	}
 
-	return nil
+	token, err := as.jwtMaker.CreateToken(user.Email, 168*time.Hour)
+	if err != nil {
+		return "", fmt.Errorf("Failed to make jwt token")
+	}
+
+	return token, nil
 }
 
 // LoginSocial logins social user
@@ -99,9 +104,4 @@ func (as *AuthService) LoginEmail(ctx context.Context, email, password string) (
 	}
 
 	return token, nil
-}
-
-// CreateToken creates a token with email and duration
-func (as *AuthService) CreateToken(email string, duration time.Duration) (string, error) {
-	return as.jwtMaker.CreateToken(email, duration)
 }
