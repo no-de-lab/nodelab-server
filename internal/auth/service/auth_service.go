@@ -72,8 +72,13 @@ func (as *AuthService) SignupEmail(ctx context.Context, user *am.SignupEmailMode
 	return nil
 }
 
-// SocialLogin signup or login for social user
-func (a *AuthService) SocialLogin() error {
+// LoginSocial logins social user
+func (a *AuthService) LoginSocial() error {
+	return nil
+}
+
+// LoginEmail logins email user
+func (a *AuthService) LoginEmail() error {
 	return nil
 }
 

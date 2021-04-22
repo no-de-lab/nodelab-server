@@ -29,6 +29,7 @@ type AuthService interface {
 	SignupEmail(ctx context.Context, user *am.SignupEmailModel) error
 	SignupSocial(ctx context.Context, user *am.SignupSocialModel) error
 	// TODO: add detail
-	SocialLogin() error
+	LoginSocial(ctx context.Context, email string) (string, error)
+	LoginEmail(ctx context.Context, email, password string) (string, error)
 	CreateToken(email string, duration time.Duration) (string, error)
 }

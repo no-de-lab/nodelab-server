@@ -59,3 +59,8 @@ func (ar *AuthResolver) SignupEmail(ctx context.Context, email, password string)
 
 	return &gqlAuth, nil
 }
+
+// LoginEmail logins the user by email
+func (ar *AuthResolver) LoginEmail(ctx context.Context, email, password string) (*gqlschema.Auth, error) {
+	return nil, nil
+}
