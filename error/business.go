@@ -1,22 +1,37 @@
 package error
 
 type BusinessError struct {
-	Message  string `json:"message"`
-	Internal error  `json:"-"`
+	Message    string `json:"message"`
+	Internal   error  `json:"-"`
+	StatusCode int    `json:"statusCode"`
 }
 
-func NewBusinessError(message string) *BusinessError {
+type InternalError struct {
+	Message    string `json:"message"`
+	Internal   error  `json:"-"`
+	StatusCode int    `json:"statusCode"`
+}
+
+func NewBusinessError(message string, err error, statusCode int) *BusinessError {
 	return &BusinessError{
 		message,
 		nil,
+		statusCode,
 	}
 }
 
-func (e *BusinessError) SetInternal(err error) *BusinessError {
-	e.Internal = err
-	return e
+func (e *BusinessError) Error() string {
+	return e.Message
 }
 
-func (e *BusinessError) Error() string {
+func NewInternalError(message string, err error, statusCode int) *InternalError {
+	return &InternalError{
+		message,
+		nil,
+		statusCode,
+	}
+}
+
+func (e *InternalError) Error() string {
 	return e.Message
 }

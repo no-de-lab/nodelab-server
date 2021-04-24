@@ -1,11 +1,9 @@
 package http
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	e "github.com/no-de-lab/nodelab-server/internal/auth/error"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
 	"github.com/no-de-lab/nodelab-server/internal/user/model"
 )
@@ -28,18 +26,18 @@ func (a *AuthHandler) SetupRoutes(e *echo.Echo) {
 func (a *AuthHandler) Signup(c echo.Context) (err error) {
 	var user model.CreateUserModel
 
-	context := c.Request().Context()
+	// context := c.Request().Context()
 
 	if err = c.Bind(&user); err != nil {
 		return
 	}
 
-	err = a.authService.Signup(context, &user)
+	// err = a.authService.SignupSocial(context, &user)
 
 	if err != nil {
-		if errors.Is(err, e.ErrUserAlreadyExists) {
-			return echo.NewHTTPError(http.StatusConflict, e.ErrUserAlreadyExists.Error())
-		}
+		// if errors.Is(err, e.ErrUserAlreadyExists) {
+		// 	return echo.NewHTTPError(http.StatusConflict, e.ErrUserAlreadyExists.Error())
+		// }
 		return
 	}
 

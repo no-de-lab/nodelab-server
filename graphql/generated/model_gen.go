@@ -24,6 +24,11 @@ type Node interface {
 	IsNode()
 }
 
+type Auth struct {
+	Email string `json:"email"`
+	Token string `json:"token"`
+}
+
 type Category struct {
 	ID       string      `json:"id"`
 	Name     string      `json:"name"`

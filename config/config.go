@@ -27,6 +27,10 @@ type PhaseInfo struct {
 	Level string
 }
 
+type SecretInfo struct {
+	SecretKey string
+}
+
 type Context struct {
 	Timeout int
 }
@@ -36,6 +40,7 @@ type Configuration struct {
 	Log      LogInfo    `mapstructure:"logging"`
 	Phase    PhaseInfo  `mapstructure:"phase"`
 	Server   ServerInfo `mapstructure:"server"`
+	Secret   SecretInfo `mapstructure:"secret"`
 	Context  Context
 }
 

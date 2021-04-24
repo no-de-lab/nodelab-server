@@ -16,3 +16,6 @@ level = "local"
 
 [server]
 port = 9090
+
+[secret]
+secretKey = "01234567890123456789012345678901"

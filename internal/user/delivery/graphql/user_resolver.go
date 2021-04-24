@@ -4,6 +4,7 @@ import (
 	"context"
 	"strconv"
 
+	"github.com/go-playground/validator"
 	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
 	"gopkg.in/jeevatkm/go-model.v1"
@@ -11,12 +12,14 @@ import (
 
 // UserResolver user resolver for graphql
 type UserResolver struct {
+	Validator   validator.Validate
 	UserService domain.UserService
 }
 
 // NewUserResolver return new user resolver instance
-func NewUserResolver(userService domain.UserService) *UserResolver {
+func NewUserResolver(validator validator.Validate, userService domain.UserService) *UserResolver {
 	return &UserResolver{
+		Validator:   validator,
 		UserService: userService,
 	}
 }
