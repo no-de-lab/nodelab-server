@@ -24,7 +24,7 @@ func (r *authRepository) FindAccountByEmail(ctx context.Context, email string) (
 	err := r.DB.GetContext(ctx, &u, findAccountByEmailQuery, email)
 
 	if err != nil {
-		return &u, err
+		return nil, err
 	}
 
 	return &u, nil
