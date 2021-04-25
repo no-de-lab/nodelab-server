@@ -2,8 +2,6 @@ package repository
 
 import (
 	"context"
-	"database/sql"
-	"errors"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
@@ -13,19 +11,17 @@ type authRepository struct {
 	DB *sqlx.DB
 }
 
+// NewAuthRepository creates a new auth repository
 func NewAuthRepository(db *sqlx.DB) domain.AuthRepository {
 	return &authRepository{
 		db,
 	}
 }
 
+// FindAccountByEmail finds accounts by email
 func (r *authRepository) FindAccountByEmail(ctx context.Context, email string) (*domain.UserAccount, error) {
 	u := domain.UserAccount{}
 	err := r.DB.GetContext(ctx, &u, findAccountByEmailQuery, email)
-
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
-	}
 
 	if err != nil {
 		return &u, err
