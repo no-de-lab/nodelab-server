@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS nodelab.user (
     `id` int NOT NULL AUTO_INCREMENT,
     `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '이메일',
-    `username` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '유저닉네임',
+    `username` varchar(20) COLLATE utf8mb4_unicode_ci COMMENT '유저닉네임',
     `profile_image_id` int DEFAULT NULL COMMENT '프로필 이미지',
     `intro` text COLLATE utf8mb4_unicode_ci COMMENT '소개글',
     `github_url` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Github URL',
