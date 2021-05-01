@@ -1,4 +1,5 @@
 type Mutation {
   signupEmail(email: String!, password: String!): Auth!
   loginEmail(email: String!, password: String!): Auth!
+  loginSocial(provider: Provider!, accessToken: String!, email: String!): Auth!
 }

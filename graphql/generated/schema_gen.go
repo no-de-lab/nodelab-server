@@ -45,8 +45,9 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Auth struct {
-		Email func(childComplexity int) int
-		Token func(childComplexity int) int
+		AccountID func(childComplexity int) int
+		Email     func(childComplexity int) int
+		Token     func(childComplexity int) int
 	}
 
 	Category struct {
@@ -83,6 +84,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		LoginEmail  func(childComplexity int, email string, password string) int
+		LoginSocial func(childComplexity int, provider Provider, accessToken string, email string) int
 		SignupEmail func(childComplexity int, email string, password string) int
 	}
 
@@ -170,6 +172,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	SignupEmail(ctx context.Context, email string, password string) (*Auth, error)
 	LoginEmail(ctx context.Context, email string, password string) (*Auth, error)
+	LoginSocial(ctx context.Context, provider Provider, accessToken string, email string) (*Auth, error)
 }
 type QueryResolver interface {
 	Studies(ctx context.Context) (*StudyConnection, error)
@@ -195,6 +198,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Auth.accountID":
+		if e.complexity.Auth.AccountID == nil {
+			break
+		}
+
+		return e.complexity.Auth.AccountID(childComplexity), true
 
 	case "Auth.email":
 		if e.complexity.Auth.Email == nil {
@@ -340,6 +350,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.LoginEmail(childComplexity, args["email"].(string), args["password"].(string)), true
+
+	case "Mutation.loginSocial":
+		if e.complexity.Mutation.LoginSocial == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_loginSocial_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.LoginSocial(childComplexity, args["provider"].(Provider), args["accessToken"].(string), args["email"].(string)), true
 
 	case "Mutation.signupEmail":
 		if e.complexity.Mutation.SignupEmail == nil {
@@ -822,6 +844,13 @@ var sources = []*ast.Source{
 	{Name: "graphql/definition/auth.graphql", Input: `type Auth {
   email: String!
   token: String!
+  accountID: String
+}
+
+enum Provider {
+  KAKAO
+  GOOGLE
+  GITHUB
 }
 `, BuiltIn: false},
 	{Name: "graphql/definition/category.graphql", Input: `type Category {
@@ -860,6 +889,7 @@ type CommentConnection {
 	{Name: "graphql/definition/mutation.graphql", Input: `type Mutation {
   signupEmail(email: String!, password: String!): Auth!
   loginEmail(email: String!, password: String!): Auth!
+  loginSocial(provider: Provider!, accessToken: String!, email: String!): Auth!
 }
 `, BuiltIn: false},
 	{Name: "graphql/definition/pagination.graphql", Input: `union Node = Study | User
@@ -899,14 +929,14 @@ type Query {
   """
   user(id: ID!): User!
   """
-  로그인 후 내정보 호출 query
+  로그인 후 내정보 호출 query 
   """
   me: User!
 }
 `, BuiltIn: false},
 	{Name: "graphql/definition/study.graphql", Input: `type Study {
   """
-  study id
+  study id 
   """
   id: ID!
   """
@@ -914,7 +944,7 @@ type Query {
   """
   category: Category!
   """
-  태그 목록
+  태그 목록 
   """
   tags: [String!]!
   """
@@ -926,7 +956,7 @@ type Query {
   """
   thumbnail: String!
   """
-  제목
+  제목 
   """
   title: String!
   """
@@ -934,7 +964,7 @@ type Query {
   """
   content: String!
   """
-  스터디 설명
+  스터디 설명 
   """
   summary: String!
   """
@@ -946,11 +976,11 @@ type Query {
   """
   duration: Int!
   """
-  작성자
+  작성자 
   """
   author: User!
   """
-  시작일
+  시작일 
   """
   startedAt: String!
   """
@@ -958,8 +988,8 @@ type Query {
   """
   users: [User!]!
   """
-  study 신청 내역
-  author 만 열람 가능
+  study 신청 내역 
+  author 만 열람 가능 
   """
   requests: [StudyRequest!]!
   """
@@ -973,12 +1003,12 @@ type Query {
   comments: CommentConnection!
 
   """
-  좋아요 개수
+  좋아요 개수 
   """
   likeCount: Int!
-
+  
   """
-  로그인 한 사람이 북마크 했는지 표시
+  로그인 한 사람이 북마크 했는지 표시 
   """
   viewerHasBookmarked: Boolean!
 
@@ -1003,13 +1033,13 @@ enum StudyStatus {
   """
   OPEN
   """
-  진행중
+  진행중 
   """
   PROGRESS
   """
-  종료
+  종료 
   """
-  CLOSED
+  CLOSED 
 }
 
 enum StudyRequestStatus {
@@ -1026,7 +1056,7 @@ type StudyRequest {
   user: User!
 
   """
-  신청 승인에 대한 상태
+  신청 승인에 대한 상태 
   """
   status: StudyRequestStatus!
 
@@ -1041,7 +1071,7 @@ type StudyRequest {
 type Curriculum {
   id: ID!
   """
-  커리큘럼 아이템
+  커리큘럼 아이템 
   """
   items: [CurriculumItem!]!
   createdAt: String!
@@ -1063,17 +1093,17 @@ type CurriculumItem {
   intro: String
   githubUrl: String
   """
-  포지션
+  포지션 
   """
   position: String
   """
-  관심사
+  관심사 
   """
   interest: String
 
   profileImage: String
   """
-  유저 스터디 목록
+  유저 스터디 목록 
   """
   studies: StudyConnection!
   """
@@ -1113,6 +1143,39 @@ func (ec *executionContext) field_Mutation_loginEmail_args(ctx context.Context, 
 		}
 	}
 	args["password"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_loginSocial_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 Provider
+	if tmp, ok := rawArgs["provider"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("provider"))
+		arg0, err = ec.unmarshalNProvider2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐProvider(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["provider"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["accessToken"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accessToken"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["accessToken"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["email"] = arg2
 	return args, nil
 }
 
@@ -1291,6 +1354,38 @@ func (ec *executionContext) _Auth_token(ctx context.Context, field graphql.Colle
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Auth_accountID(ctx context.Context, field graphql.CollectedField, obj *Auth) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Auth",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccountID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Category_id(ctx context.Context, field graphql.CollectedField, obj *Category) (ret graphql.Marshaler) {
@@ -1956,6 +2051,48 @@ func (ec *executionContext) _Mutation_loginEmail(ctx context.Context, field grap
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().LoginEmail(rctx, args["email"].(string), args["password"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*Auth)
+	fc.Result = res
+	return ec.marshalNAuth2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐAuth(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_loginSocial(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_loginSocial_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().LoginSocial(rctx, args["provider"].(Provider), args["accessToken"].(string), args["email"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5189,6 +5326,8 @@ func (ec *executionContext) _Auth(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "accountID":
+			out.Values[i] = ec._Auth_accountID(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5417,6 +5556,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "loginEmail":
 			out.Values[i] = ec._Mutation_loginEmail(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "loginSocial":
+			out.Values[i] = ec._Mutation_loginSocial(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -6445,6 +6589,16 @@ func (ec *executionContext) marshalNPageInfo2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋn
 		return graphql.Null
 	}
 	return ec._PageInfo(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNProvider2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐProvider(ctx context.Context, v interface{}) (Provider, error) {
+	var res Provider
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNProvider2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐProvider(ctx context.Context, sel ast.SelectionSet, v Provider) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

@@ -17,6 +17,10 @@ func (r *mutationResolver) LoginEmail(ctx context.Context, email string, passwor
 	return r.ar.LoginEmail(ctx, email, password)
 }
 
+func (r *mutationResolver) LoginSocial(ctx context.Context, provider gqlschema.Provider, accessToken string, email string) (*gqlschema.Auth, error) {
+	return r.ar.LoginSocial(ctx, provider, accessToken, email)
+}
+
 // Mutation returns gqlschema.MutationResolver implementation.
 func (r *Resolver) Mutation() gqlschema.MutationResolver { return &mutationResolver{r} }
 

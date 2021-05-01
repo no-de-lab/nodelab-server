@@ -30,7 +30,7 @@ type AuthRepository interface {
 type AuthService interface {
 	Login(ctx context.Context, form *am.LoginModel) error
 	SignupEmail(ctx context.Context, user *am.SignupEmailModel) (string, error)
-	SignupSocial(ctx context.Context, user *am.SignupSocialModel) (string, error)
-	LoginSocial(ctx context.Context, email string) (string, error)
+	// SignupSocial(ctx context.Context, user *am.SignupSocialModel) (string, error)
+	LoginSocial(ctx context.Context, form *am.LoginSocialModel) (string, *string, error)
 	LoginEmail(ctx context.Context, email, password string) (string, error)
 }
