@@ -68,3 +68,25 @@ func (ar *AuthResolver) LoginEmail(ctx context.Context, email, password string) 
 
 	return &gqlAuth, nil
 }
+
+// LoginSocial logins the user by social account using email
+func (ar *AuthResolver) LoginSocial(ctx context.Context, provider gqlschema.Provider, accessToken string, email string) (*gqlschema.Auth, error) {
+	loginModel := &am.LoginSocialModel{
+		Provider:    provider,
+		Email:       email,
+		AccessToken: accessToken,
+	}
+	token, accountID, err := ar.AuthService.LoginSocial(ctx, loginModel)
+	if err != nil {
+		log.Error(err)
+		return nil, ae.NewGraphqlError(ctx, err.Error(), http.StatusBadRequest)
+	}
+
+	gqlAuth := gqlschema.Auth{
+		Email:     email,
+		Token:     token,
+		AccountID: accountID,
+	}
+
+	return &gqlAuth, nil
+}
