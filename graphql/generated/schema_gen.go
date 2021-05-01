@@ -45,9 +45,8 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Auth struct {
-		AccountID func(childComplexity int) int
-		Email     func(childComplexity int) int
-		Token     func(childComplexity int) int
+		Email func(childComplexity int) int
+		Token func(childComplexity int) int
 	}
 
 	Category struct {
@@ -198,13 +197,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
-
-	case "Auth.accountID":
-		if e.complexity.Auth.AccountID == nil {
-			break
-		}
-
-		return e.complexity.Auth.AccountID(childComplexity), true
 
 	case "Auth.email":
 		if e.complexity.Auth.Email == nil {
@@ -844,7 +836,6 @@ var sources = []*ast.Source{
 	{Name: "graphql/definition/auth.graphql", Input: `type Auth {
   email: String!
   token: String!
-  accountID: String
 }
 
 enum Provider {
@@ -1354,38 +1345,6 @@ func (ec *executionContext) _Auth_token(ctx context.Context, field graphql.Colle
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Auth_accountID(ctx context.Context, field graphql.CollectedField, obj *Auth) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Auth",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AccountID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Category_id(ctx context.Context, field graphql.CollectedField, obj *Category) (ret graphql.Marshaler) {
@@ -5326,8 +5285,6 @@ func (ec *executionContext) _Auth(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "accountID":
-			out.Values[i] = ec._Auth_accountID(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

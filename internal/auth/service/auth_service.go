@@ -41,25 +41,25 @@ func (as *AuthService) Login(ctx context.Context, form *am.LoginModel) (err erro
 }
 
 // SignupSocial signup a user by social account in LoginSocial
-func (as *AuthService) signupSocial(ctx context.Context, user *am.LoginSocialModel) (string, *string, error) {
+func (as *AuthService) signupSocial(ctx context.Context, user *am.LoginSocialModel) (string, error) {
 
 	var userAccountModel domain.UserAccount
 	errs := model.Copy(&userAccountModel, user)
 	if errs != nil {
-		return "", nil, e.NewInternalError("Failed to copy account model", errs[0], http.StatusInternalServerError)
+		return "", e.NewInternalError("Failed to copy account model", errs[0], http.StatusInternalServerError)
 	}
 
 	err := as.authRepository.CreateUserBySocial(ctx, &userAccountModel)
 	if err != nil {
-		return "", nil, e.NewInternalError("Failed to create user in DB", err, http.StatusInternalServerError)
+		return "", e.NewInternalError("Failed to create user in DB", err, http.StatusInternalServerError)
 	}
 
 	token, err := as.jwtMaker.CreateToken(user.Email, 168*time.Hour)
 	if err != nil {
-		return "", nil, fmt.Errorf("Failed to make jwt token")
+		return "", fmt.Errorf("Failed to make jwt token")
 	}
 
-	return token, nil, nil
+	return token, nil
 }
 
 // SignupEmail signup a user by email and password
@@ -99,10 +99,10 @@ func (as *AuthService) SignupEmail(ctx context.Context, user *am.SignupEmailMode
 }
 
 // LoginSocial logins social user
-func (as *AuthService) LoginSocial(ctx context.Context, user *am.LoginSocialModel) (string, *string, error) {
+func (as *AuthService) LoginSocial(ctx context.Context, user *am.LoginSocialModel) (string, error) {
 	userAcc, err := as.authRepository.FindAccountByEmail(ctx, user.Email)
 	if err != nil {
-		return "", nil, err
+		return "", err
 	}
 
 	var providerId string
@@ -110,19 +110,19 @@ func (as *AuthService) LoginSocial(ctx context.Context, user *am.LoginSocialMode
 	case gqlschema.ProviderKakao:
 		kakaoId, err := util.LoginKakao(user.AccessToken)
 		if err != nil {
-			return "", nil, err
+			return "", err
 		}
 		providerId = kakaoId
 	case gqlschema.ProviderGoogle:
 		tokenInfo, err := util.LoginGoogle(user.AccessToken)
 
 		if err != nil {
-			return "", nil, err
+			return "", err
 		}
 
 		providerId = tokenInfo.Email
 	default:
-		return "", nil, fmt.Errorf("Invalid Provider")
+		return "", fmt.Errorf("Invalid Provider")
 	}
 
 	// no user -> make account
@@ -131,15 +131,15 @@ func (as *AuthService) LoginSocial(ctx context.Context, user *am.LoginSocialMode
 	}
 
 	if userAcc.ProviderID.String != providerId && gqlschema.Provider(userAcc.Provider.String) != user.Provider {
-		return "", nil, fmt.Errorf("Login Failed")
+		return "", fmt.Errorf("Login Failed")
 	}
 
 	token, err := as.jwtMaker.CreateToken(user.Email, 168*time.Hour)
 	if err != nil {
-		return "", nil, err
+		return "", err
 	}
 
-	return token, nil, nil
+	return token, nil
 }
 
 // LoginEmail logins email user and returns token

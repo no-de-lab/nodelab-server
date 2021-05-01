@@ -76,16 +76,15 @@ func (ar *AuthResolver) LoginSocial(ctx context.Context, provider gqlschema.Prov
 		Email:       email,
 		AccessToken: accessToken,
 	}
-	token, accountID, err := ar.AuthService.LoginSocial(ctx, loginModel)
+	token, err := ar.AuthService.LoginSocial(ctx, loginModel)
 	if err != nil {
 		log.Error(err)
 		return nil, ae.NewGraphqlError(ctx, err.Error(), http.StatusBadRequest)
 	}
 
 	gqlAuth := gqlschema.Auth{
-		Email:     email,
-		Token:     token,
-		AccountID: accountID,
+		Email: email,
+		Token: token,
 	}
 
 	return &gqlAuth, nil

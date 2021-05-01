@@ -1,7 +1,6 @@
 type Auth {
   email: String!
   token: String!
-  accountID: String
 }
 
 enum Provider {

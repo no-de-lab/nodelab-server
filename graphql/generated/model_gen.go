@@ -25,9 +25,8 @@ type Node interface {
 }
 
 type Auth struct {
-	Email     string  `json:"email"`
-	Token     string  `json:"token"`
-	AccountID *string `json:"accountID"`
+	Email string `json:"email"`
+	Token string `json:"token"`
 }
 
 type Category struct {
