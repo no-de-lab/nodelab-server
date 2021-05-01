@@ -25,8 +25,9 @@ type Node interface {
 }
 
 type Auth struct {
-	Email string `json:"email"`
-	Token string `json:"token"`
+	Email     string  `json:"email"`
+	Token     string  `json:"token"`
+	AccountID *string `json:"accountID"`
 }
 
 type Category struct {
@@ -170,6 +171,49 @@ type User struct {
 }
 
 func (User) IsNode() {}
+
+type Provider string
+
+const (
+	ProviderKakao  Provider = "KAKAO"
+	ProviderGoogle Provider = "GOOGLE"
+	ProviderGithub Provider = "GITHUB"
+)
+
+var AllProvider = []Provider{
+	ProviderKakao,
+	ProviderGoogle,
+	ProviderGithub,
+}
+
+func (e Provider) IsValid() bool {
+	switch e {
+	case ProviderKakao, ProviderGoogle, ProviderGithub:
+		return true
+	}
+	return false
+}
+
+func (e Provider) String() string {
+	return string(e)
+}
+
+func (e *Provider) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Provider(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Provider", str)
+	}
+	return nil
+}
+
+func (e Provider) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
 
 type StudyRequestStatus string
 
