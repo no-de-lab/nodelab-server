@@ -30,7 +30,7 @@ require (
 	github.com/tylerb/graceful v1.2.15
 	github.com/vektah/gqlparser/v2 v2.1.0
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
-	golang.org/x/text v0.3.4 // indirect
+	google.golang.org/api v0.45.0
 	gopkg.in/DATA-DOG/go-sqlmock.v1 v1.3.0
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
