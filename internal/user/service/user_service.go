@@ -35,17 +35,16 @@ func (s *userService) FindById(c context.Context, id int) (user *domain.User, er
 	return
 }
 
-func (s *userService) FindByEmail(c context.Context, email string) (user *domain.User, err error) {
+func (s *userService) FindByEmail(c context.Context, email string) (*domain.User, error) {
 	ctx, cancel := context.WithTimeout(c, s.timeout)
 	defer cancel()
 
-	user, err = s.userRepository.FindByEmail(ctx, email)
-
+	user, err := s.userRepository.FindByEmail(ctx, email)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	return
+	return user, nil
 }
 
 func (s *userService) CreateUser(c context.Context, user *um.CreateUserModel) (err error) {

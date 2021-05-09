@@ -7,6 +7,7 @@ import (
 	"github.com/go-playground/validator"
 	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
+	log "github.com/sirupsen/logrus"
 	"gopkg.in/jeevatkm/go-model.v1"
 )
 
@@ -48,7 +49,16 @@ func (ur *UserResolver) User(ctx context.Context, _id string) (*gqlschema.User, 
 	return &gqlUser, nil
 }
 
-// Me gets the current users infromation from the token payload
+// Me gets the current users information from the token payload
 func (ur *UserResolver) Me(ctx context.Context, email string) (*gqlschema.User, error) {
-	return nil, nil
+	user, err := ur.UserService.FindByEmail(ctx, email)
+	if err != nil {
+		log.WithError(err).Errorf("failed to get user for email: %s", email)
+		return nil, err
+	}
+
+	var gqlUser gqlschema.User
+	model.Copy(&gqlUser, user)
+
+	return &gqlUser, nil
 }
