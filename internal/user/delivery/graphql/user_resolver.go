@@ -34,7 +34,7 @@ func (ur *UserResolver) User(ctx context.Context, _id string) (*gqlschema.User, 
 		return nil, err
 	}
 
-	user, err := ur.UserService.FindById(ctx, id)
+	user, err := ur.UserService.FindByID(ctx, id)
 
 	if err != nil {
 		return nil, err

@@ -13,7 +13,7 @@ import (
 
 const timeFormat = "2006-01-02 15:04:05"
 
-func TestFindById(t *testing.T) {
+func TestFindByID(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
@@ -26,7 +26,7 @@ func TestFindById(t *testing.T) {
 
 	repo := repository.NewUserRepository(sqlx.NewDb(db, "mysql"))
 
-	user, err := repo.FindById(context.TODO(), 1)
+	user, err := repo.FindByID(context.TODO(), 1)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, user)

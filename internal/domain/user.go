@@ -21,13 +21,13 @@ type User struct {
 }
 
 type UserRepository interface {
-	FindById(context context.Context, id int) (user *User, err error)
+	FindByID(context context.Context, id int) (user *User, err error)
 	FindByEmail(context context.Context, email string) (user *User, err error)
 	CreateUser(context context.Context, user *User) (err error)
 }
 
 type UserService interface {
-	FindById(context context.Context, id int) (user *User, err error)
+	FindByID(context context.Context, id int) (user *User, err error)
 	FindByEmail(context context.Context, email string) (user *User, err error)
 	CreateUser(context context.Context, user *model.CreateUserModel) error
 }

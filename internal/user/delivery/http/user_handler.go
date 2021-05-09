@@ -36,7 +36,7 @@ func (h *UserHandler) GetUserInfo(c echo.Context) error {
 		return echo.ErrBadRequest
 	}
 
-	if user, err = h.UserService.FindById(context, int(id)); err != nil {
+	if user, err = h.UserService.FindByID(context, int(id)); err != nil {
 		return err
 	}
 

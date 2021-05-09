@@ -19,9 +19,9 @@ func NewUserRepository(db *sqlx.DB) domain.UserRepository {
 	}
 }
 
-func (r *userDBRepository) FindById(ctx context.Context, id int) (user *domain.User, err error) {
+func (r *userDBRepository) FindByID(ctx context.Context, id int) (user *domain.User, err error) {
 	u := domain.User{}
-	err = r.DB.GetContext(ctx, &u, FindByIdQuery, id)
+	err = r.DB.GetContext(ctx, &u, FindByIDQuery, id)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil

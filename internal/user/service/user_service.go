@@ -22,11 +22,11 @@ func NewUserService(userRepository domain.UserRepository, config *config.Configu
 	}
 }
 
-func (s *userService) FindById(c context.Context, id int) (user *domain.User, err error) {
+func (s *userService) FindByID(c context.Context, id int) (user *domain.User, err error) {
 	ctx, cancel := context.WithTimeout(c, s.timeout)
 	defer cancel()
 
-	user, err = s.userRepository.FindById(ctx, id)
+	user, err = s.userRepository.FindByID(ctx, id)
 
 	if err != nil {
 		return
