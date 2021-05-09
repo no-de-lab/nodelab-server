@@ -15,6 +15,7 @@ type userService struct {
 	timeout        time.Duration
 }
 
+// NewUserService returns a new UserService instance
 func NewUserService(userRepository domain.UserRepository, config *config.Configuration) domain.UserService {
 	return &userService{
 		userRepository,
@@ -22,6 +23,7 @@ func NewUserService(userRepository domain.UserRepository, config *config.Configu
 	}
 }
 
+// FindByID finds user by id
 func (s *userService) FindByID(c context.Context, id int) (user *domain.User, err error) {
 	ctx, cancel := context.WithTimeout(c, s.timeout)
 	defer cancel()
@@ -35,6 +37,7 @@ func (s *userService) FindByID(c context.Context, id int) (user *domain.User, er
 	return
 }
 
+// FindByEmail finds user by email
 func (s *userService) FindByEmail(c context.Context, email string) (*domain.User, error) {
 	ctx, cancel := context.WithTimeout(c, s.timeout)
 	defer cancel()
