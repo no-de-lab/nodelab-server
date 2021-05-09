@@ -30,5 +30,5 @@ func TestFindByID(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.NotNil(t, user)
-	assert.Equal(t, user.ID, int64(1))
+	assert.Equal(t, user.ID, "1")
 }
