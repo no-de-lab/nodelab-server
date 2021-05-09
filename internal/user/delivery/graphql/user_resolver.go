@@ -47,3 +47,8 @@ func (ur *UserResolver) User(ctx context.Context, _id string) (*gqlschema.User, 
 
 	return &gqlUser, nil
 }
+
+// Me gets the current users infromation from the token payload
+func (ur *UserResolver) Me(ctx context.Context, email string) (*gqlschema.User, error) {
+	return nil, nil
+}

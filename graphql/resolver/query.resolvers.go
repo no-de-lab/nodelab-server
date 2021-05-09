@@ -7,7 +7,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/labstack/echo/v4"
 	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
+	"github.com/no-de-lab/nodelab-server/internal/auth/delivery/middleware"
+	"github.com/no-de-lab/nodelab-server/internal/auth/util"
 )
 
 func (r *queryResolver) Studies(ctx context.Context) (*gqlschema.StudyConnection, error) {
@@ -23,7 +26,21 @@ func (r *queryResolver) User(ctx context.Context, id string) (*gqlschema.User, e
 }
 
 func (r *queryResolver) Me(ctx context.Context) (*gqlschema.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	c := ctx.Value(EchoCtxKey{})
+
+	ec, ok := c.(echo.Context)
+	if !ok {
+		err := fmt.Errorf("failed to convert context to echo context")
+		return nil, err
+	}
+
+	payload, ok := ec.Get(middleware.UserPayloadCtxKey).(*util.Payload)
+	if !ok {
+		err := fmt.Errorf("failed to get user payload from context")
+		return nil, err
+	}
+
+	return r.ur.Me(ctx, payload.Email)
 }
 
 // Query returns gqlschema.QueryResolver implementation.

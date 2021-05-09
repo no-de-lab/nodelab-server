@@ -14,7 +14,8 @@ const (
 	authHeaderKey  = "Authorization"
 )
 
-const userPayloadCtxKey = "userPayloadCtxKey"
+// UserPayloadCtxKey is the key for payload passed along context
+const UserPayloadCtxKey = "UserPayloadCtxKey"
 
 // Authorize reads the authorization header and sets the user payload
 func Authorize(jwtMaker util.JWTMaker) echo.MiddlewareFunc {
@@ -45,7 +46,7 @@ func Authorize(jwtMaker util.JWTMaker) echo.MiddlewareFunc {
 				return err
 			}
 
-			c.Set(userPayloadCtxKey, payload)
+			c.Set(UserPayloadCtxKey, payload)
 			return next(c)
 		}
 	}
