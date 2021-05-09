@@ -6,8 +6,6 @@ import (
 
 	"github.com/no-de-lab/nodelab-server/config"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
-	um "github.com/no-de-lab/nodelab-server/internal/user/model"
-	"gopkg.in/jeevatkm/go-model.v1"
 )
 
 type userService struct {
@@ -48,23 +46,4 @@ func (s *userService) FindByEmail(c context.Context, email string) (*domain.User
 	}
 
 	return user, nil
-}
-
-func (s *userService) CreateUser(c context.Context, user *um.CreateUserModel) (err error) {
-	ctx, cancel := context.WithTimeout(c, s.timeout)
-	defer cancel()
-
-	var userModel domain.User
-	errs := model.Copy(&userModel, user)
-
-	if errs != nil {
-		return errs[0]
-	}
-
-	err = s.userRepository.CreateUser(ctx, &userModel)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

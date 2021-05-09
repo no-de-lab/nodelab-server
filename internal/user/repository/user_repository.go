@@ -48,13 +48,3 @@ func (r *userDBRepository) FindByEmail(ctx context.Context, email string) (user 
 
 	return &u, nil
 }
-
-func (r *userDBRepository) CreateUser(context context.Context, user *domain.User) (err error) {
-	_, err = r.DB.NamedExecContext(context, CreateUserQuery, user)
-
-	if err != nil {
-		return
-	}
-
-	return nil
-}
