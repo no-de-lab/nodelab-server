@@ -8,11 +8,13 @@ import (
 )
 
 type User struct {
-	ID             int64       `db:"id"`
+	ID             string      `db:"id"`
 	Email          string      `db:"email"`
-	Username       string      `db:"username"`
-	Password       null.String `db:"password"`
+	Username       null.String `db:"username"`
 	Intro          null.String `db:"intro"`
+	GithubURL      null.String `db:"github_url"`
+	Position       null.String `db:"position"`
+	Interest       null.String `db:"interest"`
 	ProfileImageID null.Int    `db:"profile_image_id"`
 	CreatedAt      string      `db:"created_at"`
 	UpdatedAt      string      `db:"updated_at"`
