@@ -36,8 +36,7 @@ func SetupGraphQL(e *echo.Echo, resolver *resolver.Resolver, cfg *config.Configu
 		return nil
 	})
 	e.GET(graphqlEndpoint, func(c echo.Context) error {
-		cc := c.(*EchoContext)
-		playgroundHandler.ServeHTTP(cc.Response(), cc.Request())
+		playgroundHandler.ServeHTTP(c.Response(), c.Request())
 		return nil
 	})
 }
