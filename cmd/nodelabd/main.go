@@ -29,7 +29,7 @@ func main() {
 	e.Use(middleware.Recover())
 	e.HTTPErrorHandler = api.ErrorHandler
 
-	graphql.SetupGraphQL(e, rootResolver)
+	graphql.SetupGraphQL(e, rootResolver, container.Config)
 
 	for _, h := range container.Handlers {
 		h.SetupRoutes(e)

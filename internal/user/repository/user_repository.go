@@ -19,9 +19,9 @@ func NewUserRepository(db *sqlx.DB) domain.UserRepository {
 	}
 }
 
-func (r *userDBRepository) FindById(ctx context.Context, id int) (user *domain.User, err error) {
+func (r *userDBRepository) FindByID(ctx context.Context, id int) (user *domain.User, err error) {
 	u := domain.User{}
-	err = r.DB.GetContext(ctx, &u, FindByIdQuery, id)
+	err = r.DB.GetContext(ctx, &u, FindByIDQuery, id)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
@@ -47,14 +47,4 @@ func (r *userDBRepository) FindByEmail(ctx context.Context, email string) (user 
 	}
 
 	return &u, nil
-}
-
-func (r *userDBRepository) CreateUser(context context.Context, user *domain.User) (err error) {
-	_, err = r.DB.NamedExecContext(context, CreateUserQuery, user)
-
-	if err != nil {
-		return
-	}
-
-	return nil
 }
