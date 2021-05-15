@@ -5,6 +5,9 @@ import (
 	ug "github.com/no-de-lab/nodelab-server/internal/user/delivery/graphql"
 )
 
+// EchoCtxKey is the key to retrieve echo context from resolvers
+type EchoCtxKey struct{}
+
 // This file will not be regenerated automatically.
 //
 // It serves as dependency injection for your app, add any dependencies you require here.

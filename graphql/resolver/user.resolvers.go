@@ -5,13 +5,12 @@ package resolver
 
 import (
 	"context"
-	"fmt"
 
 	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
 )
 
 func (r *userResolver) Studies(ctx context.Context, obj *gqlschema.User) (*gqlschema.StudyConnection, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &gqlschema.StudyConnection{}, nil
 }
 
 // User returns gqlschema.UserResolver implementation.
