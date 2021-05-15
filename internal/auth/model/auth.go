@@ -1,6 +1,9 @@
 package model
 
-import "gopkg.in/guregu/null.v4"
+import (
+	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
+	"gopkg.in/guregu/null.v4"
+)
 
 type LoginModel struct {
 	Email    string
@@ -14,6 +17,8 @@ type SignupEmailModel struct {
 }
 
 // SignupSocialModel is used to create users via social account
-type SignupSocialModel struct {
-	Email string `json:"email" validate:"required,email"`
+type LoginSocialModel struct {
+	Email       string             `json:"email" validate:"required,email"`
+	AccessToken string             `json:"access_token" validate:"required,access_token"`
+	Provider    gqlschema.Provider `json:"provider" validate:"required,provider"`
 }

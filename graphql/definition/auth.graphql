@@ -2,3 +2,9 @@ type Auth {
   email: String!
   token: String!
 }
+
+enum Provider {
+  KAKAO
+  GOOGLE
+  GITHUB
+}
