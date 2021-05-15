@@ -10,6 +10,7 @@ import (
 
 	e "github.com/no-de-lab/nodelab-server/error"
 	am "github.com/no-de-lab/nodelab-server/internal/auth/model"
+	"github.com/no-de-lab/nodelab-server/internal/auth/provider"
 	"github.com/no-de-lab/nodelab-server/internal/auth/util"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
 
@@ -46,17 +47,17 @@ func (as *AuthService) signupSocial(ctx context.Context, user *am.LoginSocialMod
 	var userAccountModel domain.UserAccount
 	errs := model.Copy(&userAccountModel, user)
 	if errs != nil {
-		return "", e.NewInternalError("Failed to copy account model", errs[0], http.StatusInternalServerError)
+		return "", e.NewInternalError("failed to copy account model", errs[0], http.StatusInternalServerError)
 	}
 
 	err := as.authRepository.CreateUserBySocial(ctx, &userAccountModel)
 	if err != nil {
-		return "", e.NewInternalError("Failed to create user in DB", err, http.StatusInternalServerError)
+		return "", e.NewInternalError("failed to create user in DB", err, http.StatusInternalServerError)
 	}
 
 	token, err := as.jwtMaker.CreateToken(user.Email, 168*time.Hour)
 	if err != nil {
-		return "", fmt.Errorf("Failed to make jwt token")
+		return "", fmt.Errorf("failed to make jwt token")
 	}
 
 	return token, nil
@@ -66,33 +67,33 @@ func (as *AuthService) signupSocial(ctx context.Context, user *am.LoginSocialMod
 func (as *AuthService) SignupEmail(ctx context.Context, user *am.SignupEmailModel) (string, error) {
 	userAcc, err := as.authRepository.FindAccountByEmail(ctx, user.Email)
 	if userAcc != nil {
-		return "", e.NewBusinessError("User already exists", fmt.Errorf("User already exists"), http.StatusConflict)
+		return "", e.NewBusinessError("user already exists", fmt.Errorf("user already exists"), http.StatusConflict)
 	}
 
 	if !errors.Is(err, sql.ErrNoRows) && err != nil {
-		return "", e.NewInternalError("Failed to create user", err, http.StatusInternalServerError)
+		return "", e.NewInternalError("failed to create user", err, http.StatusInternalServerError)
 	}
 
 	var userAccountModel domain.UserAccount
 	errs := model.Copy(&userAccountModel, user)
 	if errs != nil {
-		return "", e.NewInternalError("Failed to copy account model", errs[0], http.StatusInternalServerError)
+		return "", e.NewInternalError("failed to copy account model", errs[0], http.StatusInternalServerError)
 	}
 
 	hashedPassword, err := util.HashedPassword(user.Password.String)
 	if err != nil {
-		return "", e.NewInternalError("Failed to has password", err, http.StatusInternalServerError)
+		return "", e.NewInternalError("failed to has password", err, http.StatusInternalServerError)
 	}
 	userAccountModel.Password = null.NewString(hashedPassword, true)
 
 	err = as.authRepository.CreateUserByEmail(ctx, &userAccountModel)
 	if err != nil {
-		return "", e.NewInternalError("Failed to create user in DB", err, http.StatusInternalServerError)
+		return "", e.NewInternalError("failed to create user in DB", err, http.StatusInternalServerError)
 	}
 
 	token, err := as.jwtMaker.CreateToken(user.Email, 168*time.Hour)
 	if err != nil {
-		return "", fmt.Errorf("Failed to make jwt token")
+		return "", fmt.Errorf("failed to make jwt token")
 	}
 
 	return token, nil
@@ -105,24 +106,24 @@ func (as *AuthService) LoginSocial(ctx context.Context, user *am.LoginSocialMode
 		return "", err
 	}
 
-	var providerId string
+	var providerID string
 	switch user.Provider {
 	case gqlschema.ProviderKakao:
-		kakaoId, err := util.LoginKakao(user.AccessToken)
+		kakaoId, err := provider.LoginKakao(user.AccessToken)
 		if err != nil {
 			return "", err
 		}
-		providerId = kakaoId
+		providerID = kakaoId
 	case gqlschema.ProviderGoogle:
-		tokenInfo, err := util.LoginGoogle(user.AccessToken)
+		tokenInfo, err := provider.LoginGoogle(user.AccessToken)
 
 		if err != nil {
 			return "", err
 		}
 
-		providerId = tokenInfo.Email
+		providerID = tokenInfo.Email
 	default:
-		return "", fmt.Errorf("Invalid Provider")
+		return "", fmt.Errorf("invalid Provider error")
 	}
 
 	// no user -> make account
@@ -130,7 +131,7 @@ func (as *AuthService) LoginSocial(ctx context.Context, user *am.LoginSocialMode
 		return as.signupSocial(ctx, user)
 	}
 
-	if userAcc.ProviderID.String != providerId && gqlschema.Provider(userAcc.Provider.String) != user.Provider {
+	if userAcc.ProviderID.String != providerID && gqlschema.Provider(userAcc.Provider.String) != user.Provider {
 		return "", fmt.Errorf("Login Failed")
 	}
 
