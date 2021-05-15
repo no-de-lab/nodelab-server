@@ -11,7 +11,7 @@ const baseURL = "https://kapi.kakao.com"
 func LoginKakao(accessToken string) (string, error) {
 
 	type kakaoResponse struct {
-		Id string `json:"id"`
+		ID string `json:"id"`
 	}
 
 	req, err := http.NewRequest("GET", baseURL+"/v2/user/me", nil)
@@ -34,5 +34,5 @@ func LoginKakao(accessToken string) (string, error) {
 		return "", err
 	}
 
-	return kr.Id, nil
+	return kr.ID, nil
 }
