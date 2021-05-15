@@ -7,9 +7,8 @@ import (
 	"google.golang.org/api/option"
 )
 
-// LoginGoogle get IDToken of Google
-func LoginGoogle(idToken string) (*oauth2.Tokeninfo, error) {
-	ctx := context.Background()
+// LoginGoogle gets idtoken from Google
+func LoginGoogle(ctx context.Context, idToken string) (*oauth2.Tokeninfo, error) {
 	oauth2Service, err := oauth2.NewService(ctx, option.WithHTTPClient(HTTPClient))
 	if err != nil {
 		return nil, err

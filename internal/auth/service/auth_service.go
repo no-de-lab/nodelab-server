@@ -93,7 +93,7 @@ func (as *AuthService) SignupEmail(ctx context.Context, user *am.SignupEmailMode
 
 	token, err := as.jwtMaker.CreateToken(user.Email, 168*time.Hour)
 	if err != nil {
-		return "", fmt.Errorf("failed to make jwt token")
+		return "", e.NewInternalError("failed to make jwt token error : %w", err, http.StatusInternalServerError)
 	}
 
 	return token, nil
@@ -115,7 +115,7 @@ func (as *AuthService) LoginSocial(ctx context.Context, user *am.LoginSocialMode
 		}
 		providerID = kakaoID
 	case gqlschema.ProviderGoogle:
-		tokenInfo, err := provider.LoginGoogle(user.AccessToken)
+		tokenInfo, err := provider.LoginGoogle(ctx, user.AccessToken)
 
 		if err != nil {
 			return "", err
