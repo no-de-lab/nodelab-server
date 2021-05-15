@@ -109,11 +109,11 @@ func (as *AuthService) LoginSocial(ctx context.Context, user *am.LoginSocialMode
 	var providerID string
 	switch user.Provider {
 	case gqlschema.ProviderKakao:
-		kakaoId, err := provider.LoginKakao(user.AccessToken)
+		kakaoID, err := provider.LoginKakao(user.AccessToken)
 		if err != nil {
 			return "", err
 		}
-		providerID = kakaoId
+		providerID = kakaoID
 	case gqlschema.ProviderGoogle:
 		tokenInfo, err := provider.LoginGoogle(user.AccessToken)
 

@@ -78,7 +78,7 @@ func (ar *AuthResolver) LoginSocial(ctx context.Context, provider gqlschema.Prov
 	}
 	token, err := ar.AuthService.LoginSocial(ctx, loginModel)
 	if err != nil {
-		log.Error(err)
+		log.WithError(err).Errorf("social login falied")
 		return nil, ae.NewGraphqlError(ctx, err.Error(), http.StatusBadRequest)
 	}
 
