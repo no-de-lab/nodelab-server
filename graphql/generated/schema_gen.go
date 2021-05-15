@@ -920,14 +920,14 @@ type Query {
   """
   user(id: ID!): User!
   """
-  로그인 후 내정보 호출 query 
+  로그인 후 내정보 호출 query
   """
   me: User!
 }
 `, BuiltIn: false},
 	{Name: "graphql/definition/study.graphql", Input: `type Study {
   """
-  study id 
+  study id
   """
   id: ID!
   """
@@ -935,7 +935,7 @@ type Query {
   """
   category: Category!
   """
-  태그 목록 
+  태그 목록
   """
   tags: [String!]!
   """
@@ -947,7 +947,7 @@ type Query {
   """
   thumbnail: String!
   """
-  제목 
+  제목
   """
   title: String!
   """
@@ -955,7 +955,7 @@ type Query {
   """
   content: String!
   """
-  스터디 설명 
+  스터디 설명
   """
   summary: String!
   """
@@ -967,11 +967,11 @@ type Query {
   """
   duration: Int!
   """
-  작성자 
+  작성자
   """
   author: User!
   """
-  시작일 
+  시작일
   """
   startedAt: String!
   """
@@ -979,8 +979,8 @@ type Query {
   """
   users: [User!]!
   """
-  study 신청 내역 
-  author 만 열람 가능 
+  study 신청 내역
+  author 만 열람 가능
   """
   requests: [StudyRequest!]!
   """
@@ -994,12 +994,12 @@ type Query {
   comments: CommentConnection!
 
   """
-  좋아요 개수 
+  좋아요 개수
   """
   likeCount: Int!
-  
+
   """
-  로그인 한 사람이 북마크 했는지 표시 
+  로그인 한 사람이 북마크 했는지 표시
   """
   viewerHasBookmarked: Boolean!
 
@@ -1024,13 +1024,13 @@ enum StudyStatus {
   """
   OPEN
   """
-  진행중 
+  진행중
   """
   PROGRESS
   """
-  종료 
+  종료
   """
-  CLOSED 
+  CLOSED
 }
 
 enum StudyRequestStatus {
@@ -1047,7 +1047,7 @@ type StudyRequest {
   user: User!
 
   """
-  신청 승인에 대한 상태 
+  신청 승인에 대한 상태
   """
   status: StudyRequestStatus!
 
@@ -1062,7 +1062,7 @@ type StudyRequest {
 type Curriculum {
   id: ID!
   """
-  커리큘럼 아이템 
+  커리큘럼 아이템
   """
   items: [CurriculumItem!]!
   createdAt: String!
@@ -1084,17 +1084,17 @@ type CurriculumItem {
   intro: String
   githubUrl: String
   """
-  포지션 
+  포지션
   """
   position: String
   """
-  관심사 
+  관심사
   """
   interest: String
 
   profileImage: String
   """
-  유저 스터디 목록 
+  유저 스터디 목록
   """
   studies: StudyConnection!
   """

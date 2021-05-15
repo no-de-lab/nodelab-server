@@ -3,7 +3,7 @@
 
 # Working directory
 # . or absolute path, please note that the directories following must be under root
-root = "." 
+root = "."
 tmp_dir = "tmp"
 
 [build]
@@ -13,7 +13,7 @@ cmd = "make build-air"
 bin = "tmp/app"
 
 # Customize binary.
-# This is how you start to run your application. 
+# This is how you start to run your application.
 # Add any flags if it has any
 full_bin = "./tmp/app/engine"
 # This log file places in your tmp_dir.

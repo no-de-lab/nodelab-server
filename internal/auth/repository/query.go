@@ -1,5 +1,6 @@
 package repository
 
+// Query for User Domain
 const (
 	findAccountByEmailQuery = `SELECT email, password FROM account WHERE email = ?`
 	createUserByEmailQuery  = `

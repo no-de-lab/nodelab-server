@@ -1,6 +1,6 @@
 type Study {
   """
-  study id 
+  study id
   """
   id: ID!
   """
@@ -8,7 +8,7 @@ type Study {
   """
   category: Category!
   """
-  태그 목록 
+  태그 목록
   """
   tags: [String!]!
   """
@@ -20,7 +20,7 @@ type Study {
   """
   thumbnail: String!
   """
-  제목 
+  제목
   """
   title: String!
   """
@@ -28,7 +28,7 @@ type Study {
   """
   content: String!
   """
-  스터디 설명 
+  스터디 설명
   """
   summary: String!
   """
@@ -40,11 +40,11 @@ type Study {
   """
   duration: Int!
   """
-  작성자 
+  작성자
   """
   author: User!
   """
-  시작일 
+  시작일
   """
   startedAt: String!
   """
@@ -52,8 +52,8 @@ type Study {
   """
   users: [User!]!
   """
-  study 신청 내역 
-  author 만 열람 가능 
+  study 신청 내역
+  author 만 열람 가능
   """
   requests: [StudyRequest!]!
   """
@@ -67,12 +67,12 @@ type Study {
   comments: CommentConnection!
 
   """
-  좋아요 개수 
+  좋아요 개수
   """
   likeCount: Int!
-  
+
   """
-  로그인 한 사람이 북마크 했는지 표시 
+  로그인 한 사람이 북마크 했는지 표시
   """
   viewerHasBookmarked: Boolean!
 
@@ -97,13 +97,13 @@ enum StudyStatus {
   """
   OPEN
   """
-  진행중 
+  진행중
   """
   PROGRESS
   """
-  종료 
+  종료
   """
-  CLOSED 
+  CLOSED
 }
 
 enum StudyRequestStatus {
@@ -120,7 +120,7 @@ type StudyRequest {
   user: User!
 
   """
-  신청 승인에 대한 상태 
+  신청 승인에 대한 상태
   """
   status: StudyRequestStatus!
 
@@ -135,7 +135,7 @@ type StudyRequest {
 type Curriculum {
   id: ID!
   """
-  커리큘럼 아이템 
+  커리큘럼 아이템
   """
   items: [CurriculumItem!]!
   createdAt: String!
