@@ -2,6 +2,7 @@ type Mutation {
   signupEmail(email: String!, password: String!): Auth!
   loginEmail(email: String!, password: String!): Auth!
   updateUser(email: String!, input: UpdateUserInput): User!
+  deleteUser(email: String!): String!
 }
 
 input UpdateUserInput {

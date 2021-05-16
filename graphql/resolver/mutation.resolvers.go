@@ -39,6 +39,10 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, email string, input *
 	return r.ur.UpdateUser(ctx, payload.Email, input)
 }
 
+func (r *mutationResolver) DeleteUser(ctx context.Context, email string) (string, error) {
+	return r.ur.DeleteUser(ctx, email)
+}
+
 // Mutation returns gqlschema.MutationResolver implementation.
 func (r *Resolver) Mutation() gqlschema.MutationResolver { return &mutationResolver{r} }
 
