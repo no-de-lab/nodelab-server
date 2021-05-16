@@ -71,3 +71,12 @@ func (s *userService) UpdateUser(c context.Context, userInfo *um.UserInfo) (*dom
 
 	return user, nil
 }
+
+// DeleteUser deletes the user for the given email
+func (s *userService) DeleteUser(ctx context.Context, email string) error {
+	ctx, cancel := context.WithTimeout(ctx, s.timeout)
+	defer cancel()
+
+	err := s.userRepository.DeleteUser(ctx, email)
+	return err
+}

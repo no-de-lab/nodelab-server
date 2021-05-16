@@ -64,7 +64,7 @@ func (ur *UserResolver) Me(ctx context.Context, email string) (*gqlschema.User, 
 	return &gqlUser, nil
 }
 
-// UpdateUser updates the current users information with the given payload
+// UpdateUser updates the current user's information with the given payload
 func (ur *UserResolver) UpdateUser(ctx context.Context, email string, payload *gqlschema.UpdateUserInput) (*gqlschema.User, error) {
 	uim := &um.UserInfo{
 		Email:     email,
@@ -85,4 +85,15 @@ func (ur *UserResolver) UpdateUser(ctx context.Context, email string, payload *g
 	model.Copy(&gqlUser, user)
 
 	return &gqlUser, nil
+}
+
+// DeleteUser deletes the current user's information
+func (ur *UserResolver) DeleteUser(ctx context.Context, email string) (string, error) {
+	err := ur.UserService.DeleteUser(ctx, email)
+	if err != nil {
+		log.WithError(err).Errorf("failed to delete user: %s", email)
+		return "", err
+	}
+
+	return email, nil
 }
