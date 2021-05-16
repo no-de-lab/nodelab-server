@@ -62,3 +62,13 @@ func (r *userDBRepository) UpdateUser(ctx context.Context, userInfo *um.UserInfo
 
 	return nil
 }
+
+// DeleteUser deletes a user
+func (r *userDBRepository) DeleteUser(ctx context.Context, email string) error {
+	_, err := r.DB.ExecContext(ctx, deleteUserByEmailQuery, email)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

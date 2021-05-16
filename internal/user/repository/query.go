@@ -8,4 +8,5 @@ const (
 		UPDATE user
 		SET username=:username, intro=:intro, position=:position, interest=:interest, github_url=:github_url, updated_at=NOW()
 		WHERE email=:email;`
+	deleteUserByEmailQuery = `DELETE FROM account where email=?`
 )
