@@ -57,10 +57,10 @@ func (s *userService) UpdateUser(c context.Context, userInfo *um.UserInfo) (*dom
 	defer cancel()
 
 	err := s.userRepository.UpdateUser(ctx, userInfo)
-	if err.(*mysql.MySQLError).Number == 1062 {
-		return nil, fmt.Errorf("username: %s already exists", *userInfo.Username)
-	}
 	if err != nil {
+		if err.(*mysql.MySQLError).Number == 1062 {
+			return nil, fmt.Errorf("username: %s already exists", *userInfo.Username)
+		}
 		return nil, fmt.Errorf("failed to update user: %v", err)
 	}
 
