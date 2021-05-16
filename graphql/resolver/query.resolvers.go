@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
 	"github.com/no-de-lab/nodelab-server/internal/auth/delivery/middleware"
 	"github.com/no-de-lab/nodelab-server/internal/auth/util"

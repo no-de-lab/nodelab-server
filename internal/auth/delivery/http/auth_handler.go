@@ -24,7 +24,7 @@ func (a *AuthHandler) SetupRoutes(e *echo.Echo) {
 }
 
 func (a *AuthHandler) Signup(c echo.Context) (err error) {
-	var user model.CreateUserModel
+	var user model.CreateUser
 
 	// context := c.Request().Context()
 

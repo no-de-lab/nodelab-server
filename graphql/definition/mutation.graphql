@@ -2,4 +2,14 @@ type Mutation {
   signupEmail(email: String!, password: String!): Auth!
   loginEmail(email: String!, password: String!): Auth!
   loginSocial(provider: Provider!, accessToken: String!, email: String!): Auth!
+  updateUser(email: String!, input: UpdateUserInput): User!
+  deleteUser(email: String!): String!
+}
+
+input UpdateUserInput {
+  username: String
+  position: String
+  interest: String
+  githubURL: String
+  intro: String
 }
