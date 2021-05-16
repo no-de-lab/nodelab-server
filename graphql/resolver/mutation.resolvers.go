@@ -21,6 +21,10 @@ func (r *mutationResolver) LoginEmail(ctx context.Context, email string, passwor
 	return r.ar.LoginEmail(ctx, email, password)
 }
 
+func (r *mutationResolver) LoginSocial(ctx context.Context, provider gqlschema.Provider, accessToken string, email string) (*gqlschema.Auth, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *mutationResolver) UpdateUser(ctx context.Context, email string, input *gqlschema.UpdateUserInput) (*gqlschema.User, error) {
 	c := ctx.Value(EchoCtxKey{})
 
