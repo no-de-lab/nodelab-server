@@ -150,6 +150,14 @@ type StudyRequest struct {
 	UpdatedAt string `json:"updatedAt"`
 }
 
+type UpdateUserInput struct {
+	Username  *string `json:"username"`
+	Position  *string `json:"position"`
+	Interest  *string `json:"interest"`
+	GithubURL *string `json:"githubURL"`
+	Intro     *string `json:"intro"`
+}
+
 type User struct {
 	ID        string  `json:"id"`
 	Email     string  `json:"email"`
