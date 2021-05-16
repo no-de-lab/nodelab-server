@@ -7,6 +7,7 @@ import (
 	"github.com/go-playground/validator"
 	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
+	um "github.com/no-de-lab/nodelab-server/internal/user/model"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/jeevatkm/go-model.v1"
 )
@@ -44,7 +45,7 @@ func (ur *UserResolver) User(ctx context.Context, _id string) (*gqlschema.User, 
 	model.Copy(&gqlUser, user)
 
 	// set mismatch type
-	gqlUser.Intro = &user.Intro.String
+	gqlUser.Intro = user.Intro
 
 	return &gqlUser, nil
 }
@@ -54,6 +55,29 @@ func (ur *UserResolver) Me(ctx context.Context, email string) (*gqlschema.User, 
 	user, err := ur.UserService.FindByEmail(ctx, email)
 	if err != nil {
 		log.WithError(err).Errorf("failed to get user for email: %s", email)
+		return nil, err
+	}
+
+	var gqlUser gqlschema.User
+	model.Copy(&gqlUser, user)
+
+	return &gqlUser, nil
+}
+
+// UpdateUser updates the current users information with the given payload
+func (ur *UserResolver) UpdateUser(ctx context.Context, email string, payload *gqlschema.UpdateUserInput) (*gqlschema.User, error) {
+	uim := &um.UserInfo{
+		Email:     email,
+		Username:  payload.Username,
+		Intro:     payload.Intro,
+		Position:  payload.Position,
+		Interest:  payload.Interest,
+		GithubURL: payload.GithubURL,
+	}
+
+	user, err := ur.UserService.UpdateUser(ctx, uim)
+	if err != nil {
+		log.WithError(err).Errorf("failed to update user: %s", email)
 		return nil, err
 	}
 

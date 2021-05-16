@@ -2,10 +2,13 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	"github.com/go-sql-driver/mysql"
 	"github.com/no-de-lab/nodelab-server/config"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
+	um "github.com/no-de-lab/nodelab-server/internal/user/model"
 )
 
 type userService struct {
@@ -43,6 +46,27 @@ func (s *userService) FindByEmail(c context.Context, email string) (*domain.User
 	user, err := s.userRepository.FindByEmail(ctx, email)
 	if err != nil {
 		return nil, err
+	}
+
+	return user, nil
+}
+
+// UpdateUser updates the user with the given payload
+func (s *userService) UpdateUser(c context.Context, userInfo *um.UserInfo) (*domain.User, error) {
+	ctx, cancel := context.WithTimeout(c, s.timeout)
+	defer cancel()
+
+	err := s.userRepository.UpdateUser(ctx, userInfo)
+	if err.(*mysql.MySQLError).Number == 1062 {
+		return nil, fmt.Errorf("username: %s already exists", *userInfo.Username)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to update user: %v", err)
+	}
+
+	user, err := s.userRepository.FindByEmail(ctx, userInfo.Email)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read updated user: %v", err)
 	}
 
 	return user, nil
