@@ -10,11 +10,14 @@ import (
 
 	e "github.com/no-de-lab/nodelab-server/error"
 	am "github.com/no-de-lab/nodelab-server/internal/auth/model"
+	"github.com/no-de-lab/nodelab-server/internal/auth/provider"
 	"github.com/no-de-lab/nodelab-server/internal/auth/util"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
 
 	"gopkg.in/guregu/null.v4"
 	"gopkg.in/jeevatkm/go-model.v1"
+
+	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
 )
 
 // AuthService business logic for auth
@@ -38,50 +41,106 @@ func (as *AuthService) Login(ctx context.Context, form *am.LoginModel) (err erro
 	return nil
 }
 
-// SignupSocial signup a user by social account
-func (as *AuthService) SignupSocial(ctx context.Context, user *am.SignupSocialModel) (string, error) {
-	return "", nil
+// SignupSocial signup a user by social account in LoginSocial
+func (as *AuthService) signupSocial(ctx context.Context, user *am.LoginSocialModel) (string, error) {
+
+	var userAccountModel domain.UserAccount
+	errs := model.Copy(&userAccountModel, user)
+	if errs != nil {
+		return "", e.NewInternalError("failed to copy account model", errs[0], http.StatusInternalServerError)
+	}
+
+	err := as.authRepository.CreateUserBySocial(ctx, &userAccountModel)
+	if err != nil {
+		return "", e.NewInternalError("failed to create user in DB", err, http.StatusInternalServerError)
+	}
+
+	token, err := as.jwtMaker.CreateToken(user.Email, 168*time.Hour)
+	if err != nil {
+		return "", fmt.Errorf("failed to make jwt token")
+	}
+
+	return token, nil
 }
 
 // SignupEmail signup a user by email and password
 func (as *AuthService) SignupEmail(ctx context.Context, user *am.SignupEmailModel) (string, error) {
 	userAcc, err := as.authRepository.FindAccountByEmail(ctx, user.Email)
 	if userAcc != nil {
-		return "", e.NewBusinessError("User already exists", fmt.Errorf("User already exists"), http.StatusConflict)
+		return "", e.NewBusinessError("user already exists", fmt.Errorf("user already exists"), http.StatusConflict)
 	}
 
 	if !errors.Is(err, sql.ErrNoRows) && err != nil {
-		return "", e.NewInternalError("Failed to create user", err, http.StatusInternalServerError)
+		return "", e.NewInternalError("failed to create user", err, http.StatusInternalServerError)
 	}
 
 	var userAccountModel domain.UserAccount
 	errs := model.Copy(&userAccountModel, user)
 	if errs != nil {
-		return "", e.NewInternalError("Failed to copy account model", errs[0], http.StatusInternalServerError)
+		return "", e.NewInternalError("failed to copy account model", errs[0], http.StatusInternalServerError)
 	}
 
 	hashedPassword, err := util.HashedPassword(user.Password.String)
 	if err != nil {
-		return "", e.NewInternalError("Failed to has password", err, http.StatusInternalServerError)
+		return "", e.NewInternalError("failed to has password", err, http.StatusInternalServerError)
 	}
 	userAccountModel.Password = null.NewString(hashedPassword, true)
 
 	err = as.authRepository.CreateUserByEmail(ctx, &userAccountModel)
 	if err != nil {
-		return "", e.NewInternalError("Failed to create user in DB", err, http.StatusInternalServerError)
+		return "", e.NewInternalError("failed to create user in DB", err, http.StatusInternalServerError)
 	}
 
 	token, err := as.jwtMaker.CreateToken(user.Email, 168*time.Hour)
 	if err != nil {
-		return "", fmt.Errorf("Failed to make jwt token")
+		return "", e.NewInternalError("failed to make jwt token error : %w", err, http.StatusInternalServerError)
 	}
 
 	return token, nil
 }
 
 // LoginSocial logins social user
-func (as *AuthService) LoginSocial(ctx context.Context, email string) (string, error) {
-	return "", nil
+func (as *AuthService) LoginSocial(ctx context.Context, user *am.LoginSocialModel) (string, error) {
+	userAcc, err := as.authRepository.FindAccountByEmail(ctx, user.Email)
+	if err != nil {
+		return "", err
+	}
+
+	var providerID string
+	switch user.Provider {
+	case gqlschema.ProviderKakao:
+		kakaoID, err := provider.LoginKakao(user.AccessToken)
+		if err != nil {
+			return "", err
+		}
+		providerID = kakaoID
+	case gqlschema.ProviderGoogle:
+		tokenInfo, err := provider.LoginGoogle(ctx, user.AccessToken)
+
+		if err != nil {
+			return "", err
+		}
+
+		providerID = tokenInfo.Email
+	default:
+		return "", fmt.Errorf("invalid Provider error")
+	}
+
+	// no user -> make account
+	if userAcc == nil {
+		return as.signupSocial(ctx, user)
+	}
+
+	if userAcc.ProviderID.String != providerID && gqlschema.Provider(userAcc.Provider.String) != user.Provider {
+		return "", fmt.Errorf("Login Failed")
+	}
+
+	token, err := as.jwtMaker.CreateToken(user.Email, 168*time.Hour)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
 
 // LoginEmail logins email user and returns token
