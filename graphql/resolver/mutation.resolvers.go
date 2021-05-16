@@ -5,8 +5,12 @@ package resolver
 
 import (
 	"context"
+	"fmt"
 
+	echo "github.com/labstack/echo/v4"
 	gqlschema "github.com/no-de-lab/nodelab-server/graphql/generated"
+	"github.com/no-de-lab/nodelab-server/internal/auth/delivery/middleware"
+	"github.com/no-de-lab/nodelab-server/internal/auth/util"
 )
 
 func (r *mutationResolver) SignupEmail(ctx context.Context, email string, password string) (*gqlschema.Auth, error) {
@@ -15,6 +19,24 @@ func (r *mutationResolver) SignupEmail(ctx context.Context, email string, passwo
 
 func (r *mutationResolver) LoginEmail(ctx context.Context, email string, password string) (*gqlschema.Auth, error) {
 	return r.ar.LoginEmail(ctx, email, password)
+}
+
+func (r *mutationResolver) UpdateUser(ctx context.Context, email string, input *gqlschema.UpdateUserInput) (*gqlschema.User, error) {
+	c := ctx.Value(EchoCtxKey{})
+
+	ec, ok := c.(echo.Context)
+	if !ok {
+		err := fmt.Errorf("failed to convert context to echo context")
+		return nil, err
+	}
+
+	payload, ok := ec.Get(middleware.UserPayloadCtxKey).(*util.Payload)
+	if !ok {
+		err := fmt.Errorf("failed to get user payload from context")
+		return nil, err
+	}
+
+	return r.ur.UpdateUser(ctx, payload.Email, input)
 }
 
 // Mutation returns gqlschema.MutationResolver implementation.
