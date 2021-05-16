@@ -25,6 +25,7 @@ type UserRepository interface {
 	FindByID(context context.Context, id int) (user *User, err error)
 	FindByEmail(context context.Context, email string) (user *User, err error)
 	UpdateUser(context context.Context, userInfo *um.UserInfo) (err error)
+	DeleteUser(context context.Context, email string) (err error)
 }
 
 // UserService is the service layer for user
@@ -32,4 +33,5 @@ type UserService interface {
 	FindByID(context context.Context, id int) (user *User, err error)
 	FindByEmail(context context.Context, email string) (user *User, err error)
 	UpdateUser(context context.Context, userInfo *um.UserInfo) (user *User, err error)
+	DeleteUser(context context.Context, email string) (err error)
 }
