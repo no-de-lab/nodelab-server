@@ -5,17 +5,17 @@ type User {
   intro: String
   githubUrl: String
   """
-  포지션 
+  포지션
   """
   position: String
   """
-  관심사 
+  관심사
   """
   interest: String
 
   profileImage: String
   """
-  유저 스터디 목록 
+  유저 스터디 목록
   """
   studies: StudyConnection!
   """

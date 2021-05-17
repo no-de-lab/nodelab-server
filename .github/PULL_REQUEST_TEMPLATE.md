@@ -9,4 +9,4 @@ Fixes #issue
 - [ ] Added test cases for the changes if necessary
 - [ ] Passes all test cases
 - [ ] CI/CD build passes
-- [ ] Made changes to the README if necessary 
+- [ ] Made changes to the README if necessary
