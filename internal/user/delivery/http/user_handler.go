@@ -27,7 +27,7 @@ func (h *UserHandler) SetupRoutes(e *echo.Echo) {
 
 func (h *UserHandler) GetUserInfo(c echo.Context) error {
 	var user *domain.User
-	var userInfo um.UserInfoModel
+	var userInfo um.UserInfo
 
 	context := c.Request().Context()
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
