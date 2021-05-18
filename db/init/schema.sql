@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS nodelab.account
     `password` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '패스워드',
     `provider`      varchar(20) COMMENT '프로바이더',
     `provider_id`   varchar(50) COMMENT '프로바이더 id',
-    `access_token`  varchar(50) COMMENT '액세스 토큰',
+    `access_token`  varchar(200) COMMENT '액세스 토큰',
     `created_at` datetime DEFAULT NULL,
     `updated_at` datetime DEFAULT NULL,
     PRIMARY KEY (`id`),
