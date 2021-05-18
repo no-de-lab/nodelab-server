@@ -11,7 +11,7 @@ const baseURL = "https://kapi.kakao.com"
 func LoginKakao(accessToken string) (string, error) {
 
 	type kakaoResponse struct {
-		ID string `json:"id"`
+		ID int `json:"id"`
 	}
 
 	req, err := http.NewRequest("GET", baseURL+"/v2/user/me", nil)
@@ -27,12 +27,13 @@ func LoginKakao(accessToken string) (string, error) {
 		return "", fmt.Errorf("falied to get response of Kakao : %w", err)
 	}
 
-	kr := new(kakaoResponse)
-	err = GetJSON(resp, kr)
+	var kr kakaoResponse
+
+	err = GetJSON(resp, &kr)
 
 	if err != nil {
 		return "", err
 	}
 
-	return kr.ID, nil
+	return string(rune(kr.ID)), nil
 }

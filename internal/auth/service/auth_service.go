@@ -42,13 +42,13 @@ func (as *AuthService) Login(ctx context.Context, form *am.LoginModel) (err erro
 }
 
 // SignupSocial signup a user by social account in LoginSocial
-func (as *AuthService) signupSocial(ctx context.Context, user *am.LoginSocialModel) (string, error) {
+func (as *AuthService) signupSocial(ctx context.Context, user *am.LoginSocialModel, providerID string) (string, error) {
 
 	var userAccountModel domain.UserAccount
-	errs := model.Copy(&userAccountModel, user)
-	if errs != nil {
-		return "", e.NewInternalError("failed to copy account model", errs[0], http.StatusInternalServerError)
-	}
+	userAccountModel.AccessToken = null.NewString(user.AccessToken, true)
+	userAccountModel.Provider = null.NewString(user.Provider.String(), true)
+	userAccountModel.ProviderID = null.NewString(providerID, true)
+	userAccountModel.Email = user.Email
 
 	err := as.authRepository.CreateUserBySocial(ctx, &userAccountModel)
 	if err != nil {
@@ -124,7 +124,7 @@ func (as *AuthService) LoginSocial(ctx context.Context, user *am.LoginSocialMode
 
 	// no user -> make account
 	if userAcc == nil {
-		return as.signupSocial(ctx, user)
+		return as.signupSocial(ctx, user, providerID)
 	}
 
 	if userAcc.ProviderID.String != providerID && gqlschema.Provider(userAcc.Provider.String) != user.Provider {
