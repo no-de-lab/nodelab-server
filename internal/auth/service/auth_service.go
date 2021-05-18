@@ -101,11 +101,7 @@ func (as *AuthService) SignupEmail(ctx context.Context, user *am.SignupEmailMode
 
 // LoginSocial logins social user
 func (as *AuthService) LoginSocial(ctx context.Context, user *am.LoginSocialModel) (string, error) {
-	userAcc, err := as.authRepository.FindAccountByEmail(ctx, user.Email)
-	if err != nil {
-		return "", err
-	}
-
+	userAcc, _ := as.authRepository.FindAccountByEmail(ctx, user.Email)
 	var providerID string
 	switch user.Provider {
 	case gqlschema.ProviderKakao:
