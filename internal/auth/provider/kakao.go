@@ -3,6 +3,7 @@ package provider
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 const baseURL = "https://kapi.kakao.com"
@@ -35,5 +36,5 @@ func LoginKakao(accessToken string) (string, error) {
 		return "", err
 	}
 
-	return string(rune(kr.ID)), nil
+	return strconv.Itoa(kr.ID), nil
 }
