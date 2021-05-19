@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS nodelab.account
     `access_token`  varchar(200) COMMENT '액세스 토큰',
     `created_at` datetime DEFAULT NULL,
     `updated_at` datetime DEFAULT NULL,
+    `deleted_at` datetime DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='로그인 정보';
@@ -23,6 +24,7 @@ CREATE TABLE IF NOT EXISTS nodelab.user (
     `interest` ENUM('FRONTEND', 'BACKEND', 'FULLSTACK', 'DEVOPS', 'MOBILE', 'MANAGER', 'AI', 'DATA', 'DATABASE', 'DESIGNER') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '관심사',
     `created_at` datetime DEFAULT NULL,
     `updated_at` datetime DEFAULT NULL,
+    `deleted_at` datetime DEFAULT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`email`) REFERENCES account(`email`) ON DELETE CASCADE,
     UNIQUE KEY `email_UNIQUE` (`email`),
