@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/no-de-lab/nodelab-server/internal/auth/util"
 )
 
@@ -49,5 +50,15 @@ func Authorize(jwtMaker util.JWTMaker) echo.MiddlewareFunc {
 			c.Set(UserPayloadCtxKey, payload)
 			return next(c)
 		}
+	}
+}
+
+func AddCORS(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		CORSMiddleware := middleware.CORSWithConfig(middleware.CORSConfig{
+			AllowOrigins: []string{"https://localhost:3000"},
+		})
+		CORSHandler := CORSMiddleware(next)
+		return CORSHandler(c)
 	}
 }
