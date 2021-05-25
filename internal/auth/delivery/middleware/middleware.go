@@ -53,10 +53,11 @@ func Authorize(jwtMaker util.JWTMaker) echo.MiddlewareFunc {
 	}
 }
 
-func AddCORS(next echo.HandlerFunc) echo.HandlerFunc {
+// CORS allows us to customize the CORS headers
+func CORS(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		CORSMiddleware := middleware.CORSWithConfig(middleware.CORSConfig{
-			AllowOrigins: []string{"https://localhost:3000"},
+			AllowOrigins: []string{"*"},
 		})
 		CORSHandler := CORSMiddleware(next)
 		return CORSHandler(c)
