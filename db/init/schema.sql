@@ -28,3 +28,23 @@ CREATE TABLE IF NOT EXISTS nodelab.user (
     UNIQUE KEY `email_UNIQUE` (`email`),
     UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='회원';
+
+CREATE TABLE IF NOT EXISTS nodelab.study (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `created_at` datetime DEFAULT NULL,
+   `updated_at` datetime DEFAULT NULL,
+   `deleted_at` datetime DEFAULT NULL,
+   `studyname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 모임 명',
+   `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 제목',
+   `content` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 설명',
+   `summary` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 요약',
+   `notice` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 공지사항',
+   `start_date` datetime NOT NULL ,
+   `finish_date` datetime NOT NULL,
+   `limit` int NOT NULL,
+   `thumbnail` varchar(500) NOT NULL,
+   `status` ENUM('OPEN', 'PROGRESS', 'CLOSED') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '포지션',
+   `leader_id` int NOT NULL,
+   PRIMARY KEY (`id`),
+   FOREIGN KEY (`leader_id`) REFERENCES user(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='스터디';
