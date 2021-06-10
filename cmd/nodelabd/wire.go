@@ -10,11 +10,12 @@ import (
 	"github.com/no-de-lab/nodelab-server/db"
 	"github.com/no-de-lab/nodelab-server/graphql/resolver"
 	"github.com/no-de-lab/nodelab-server/internal/auth"
+	"github.com/no-de-lab/nodelab-server/internal/study"
 	"github.com/no-de-lab/nodelab-server/internal/user"
 )
 
 // MainSet all instance set (service, resolver, handler ... etc)
-var MainSet = wire.NewSet(healthcheck.NewHealthCheckHandler, config.LoadConfig, db.NewDatabase, auth.AuthSet, user.UserSet, container.NewDIContainer, resolver.NewResolver)
+var MainSet = wire.NewSet(healthcheck.NewHealthCheckHandler, config.LoadConfig, db.NewDatabase, auth.AuthSet, user.UserSet, study.StudySet, container.NewDIContainer, resolver.NewResolver)
 
 // InitializeDIContainer return instance bean container
 func InitializeDIContainer() *container.DIContainer {
