@@ -29,7 +29,7 @@ func (s *studyService) FindByID(c context.Context, id int) (study *domain.Study,
 	study, err = s.studyRepository.FindByID(ctx, id)
 
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	return study, err
@@ -43,7 +43,7 @@ func (s *studyService) FindByTitle(c context.Context, name string) (study *[]dom
 	study, err = s.studyRepository.FindByTitle(ctx, name)
 
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	return study, err

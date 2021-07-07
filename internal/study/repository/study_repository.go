@@ -30,7 +30,7 @@ func (r *studyDBRepository) FindByID(ctx context.Context, id int) (study *domain
 	}
 
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	return &s, nil
@@ -45,7 +45,7 @@ func (r *studyDBRepository) FindByTitle(ctx context.Context, title string) (stud
 	}
 
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	return &s, nil
