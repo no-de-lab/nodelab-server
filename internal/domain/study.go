@@ -8,9 +8,9 @@ import (
 // Study is a struct to represent a nodelab study
 type Study struct {
 	ID         string    `db:"id"`
-	CreatedAt  string    `db:"created_at"`
-	UpdatedAt  string    `db:"updated_at"`
-	StudyName  string    `db:"studyname"`
+	CreatedAt  time.Time `db:"created_at"`
+	UpdatedAt  time.Time `db:"updated_at"`
+	Name       string    `db:"name"`
 	Limit      int       `db:"limit"`
 	StartDate  time.Time `db:"start_date"`
 	FinishDate time.Time `db:"finish_date"`
