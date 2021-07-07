@@ -34,17 +34,19 @@ CREATE TABLE IF NOT EXISTS nodelab.study (
    `created_at` datetime DEFAULT NOW(),
    `updated_at` datetime DEFAULT NOW(),
    `deleted_at` datetime DEFAULT NULL,
-   `studyname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 모임 명',
+   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 모임 명',
    `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 제목',
-   `content` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 설명',
-   `summary` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 요약',
-   `notice` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 공지사항',
+   `content` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 설명',
+   `summary` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 요약',
+   `notice` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '스터디 공지사항',
    `start_date` datetime NOT NULL ,
    `finish_date` datetime NOT NULL,
    `limit` int NOT NULL,
-   `thumbnail` varchar(500) NOT NULL,
+   `thumbnail_url` varchar(500) NOT NULL,
    `status` ENUM('OPEN', 'PROGRESS', 'CLOSED') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '포지션',
    `leader_id` int NOT NULL,
    PRIMARY KEY (`id`),
    FOREIGN KEY (`leader_id`) REFERENCES user(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='스터디';
+
+CREATE INDEX IF NOT EXISTS study_title_idx on nodelab.study (title);
