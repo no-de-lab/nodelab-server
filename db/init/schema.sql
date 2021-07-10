@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS nodelab.study (
    `finish_date` datetime NOT NULL,
    `limit` int NOT NULL,
    `thumbnail_url` varchar(500) NOT NULL,
-   `status` ENUM('OPEN', 'PROGRESS', 'CLOSED') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '포지션',
+   `status` ENUM('OPEN', 'PROGRESS', 'CLOSED') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '상태',
    `leader_id` int NOT NULL,
    PRIMARY KEY (`id`),
    FOREIGN KEY (`leader_id`) REFERENCES user(`id`)
