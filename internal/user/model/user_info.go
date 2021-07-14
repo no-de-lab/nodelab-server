@@ -2,7 +2,7 @@ package model
 
 // UserInfo is used to update user info
 type UserInfo struct {
-	ID              int64   `json:"id"`
+	ID              int     `json:"id"`
 	Email           string  `json:"email" db:"email"`
 	Username        *string `json:"username" db:"username"`
 	Intro           *string `json:"intro" db:"intro"`
