@@ -6,6 +6,7 @@ import (
 
 	"github.com/no-de-lab/nodelab-server/config"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
+	sm "github.com/no-de-lab/nodelab-server/internal/study/model"
 )
 
 type studyService struct {
@@ -47,4 +48,47 @@ func (s *studyService) FindByTitle(c context.Context, name string) (study *[]dom
 	}
 
 	return study, err
+}
+
+// CreateStudy create study
+func (s *studyService) CreateStudy(ctx context.Context, input *sm.CreateStudy) (*domain.Study, error) {
+	study, err := s.studyRepository.CreateStudy(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return study, err
+}
+
+// UpdateStudy update study
+func (s *studyService) UpdateStudy(ctx context.Context, input *sm.UpdateStudy) (*domain.Study, error) {
+	study, err := s.studyRepository.UpdateStudy(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return study, err
+}
+
+// DeleteStudy delete study
+func (s *studyService) DeleteStudy(ctx context.Context, id int) (flag bool, err error) {
+	flag, err = s.studyRepository.DeleteStudy(ctx, id)
+	if err != nil {
+		return flag, err
+	}
+
+	return flag, nil
+}
+
+// FindByEmail finds user by email
+func (s *studyService) FindByEmail(c context.Context, email string) (*domain.User, error) {
+	ctx, cancel := context.WithTimeout(c, s.timeout)
+	defer cancel()
+
+	user, err := s.studyRepository.FindByEmail(ctx, email)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
