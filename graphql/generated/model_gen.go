@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"time"
 )
 
 type Comment interface {
@@ -46,6 +47,18 @@ type CommentEdge struct {
 	Node   Comment `json:"node"`
 }
 
+type CreateStudyInput struct {
+	Name       string    `json:"name"`
+	Limit      int       `json:"limit"`
+	StartDate  time.Time `json:"startDate"`
+	FinishDate time.Time `json:"finishDate"`
+	Summary    string    `json:"summary"`
+	Title      string    `json:"title"`
+	Content    string    `json:"content"`
+	Notice     string    `json:"notice"`
+	Thumbnail  string    `json:"thumbnail"`
+}
+
 type Curriculum struct {
 	ID string `json:"id"`
 	// 커리큘럼 아이템
@@ -82,6 +95,8 @@ type Study struct {
 	Thumbnail string `json:"thumbnail"`
 	// 제목
 	Title string `json:"title"`
+	// 이름
+	Name string `json:"name"`
 	// 내용 (HTML)
 	Content string `json:"content"`
 	// 스터디 설명
@@ -93,7 +108,9 @@ type Study struct {
 	// 작성자
 	Author *User `json:"author"`
 	// 시작일
-	StartedAt string `json:"startedAt"`
+	StartDate time.Time `json:"startDate"`
+	// 종료일
+	FinishDate time.Time `json:"finishDate"`
 	// study 구성원 내역
 	Users []*User `json:"users"`
 	// study 신청 내역
@@ -106,9 +123,9 @@ type Study struct {
 	// 좋아요 개수
 	LikeCount int `json:"likeCount"`
 	// 로그인 한 사람이 북마크 했는지 표시
-	ViewerHasBookmarked bool   `json:"viewerHasBookmarked"`
-	CreatedAt           string `json:"createdAt"`
-	UpdatedAt           string `json:"updatedAt"`
+	ViewerHasBookmarked bool      `json:"viewerHasBookmarked"`
+	CreatedAt           time.Time `json:"createdAt"`
+	UpdatedAt           time.Time `json:"updatedAt"`
 }
 
 func (Study) IsNode() {}
@@ -145,9 +162,22 @@ type StudyRequest struct {
 	// 신청 승인에 대한 상태
 	Status StudyRequestStatus `json:"status"`
 	// 신청할떄 보내는 내용
-	Content   string `json:"content"`
-	CreatedAt string `json:"createdAt"`
-	UpdatedAt string `json:"updatedAt"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+type UpdateStudyInput struct {
+	Name       *string      `json:"name"`
+	Limit      *int         `json:"limit"`
+	StartDate  *time.Time   `json:"startDate"`
+	FinishDate *time.Time   `json:"finishDate"`
+	Summary    *string      `json:"summary"`
+	Title      *string      `json:"title"`
+	Content    *string      `json:"content"`
+	Notice     *string      `json:"notice"`
+	Thumbnail  *string      `json:"thumbnail"`
+	Status     *StudyStatus `json:"status"`
 }
 
 type UpdateUserInput struct {
