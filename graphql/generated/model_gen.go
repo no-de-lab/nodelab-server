@@ -48,15 +48,15 @@ type CommentEdge struct {
 }
 
 type CreateStudyInput struct {
-	Name       string    `json:"name"`
-	Limit      int       `json:"limit"`
-	StartDate  time.Time `json:"startDate"`
-	FinishDate time.Time `json:"finishDate"`
-	Summary    string    `json:"summary"`
-	Title      string    `json:"title"`
-	Content    string    `json:"content"`
-	Notice     string    `json:"notice"`
-	Thumbnail  string    `json:"thumbnail"`
+	Name         string    `json:"name"`
+	Limit        int       `json:"limit"`
+	StartDate    time.Time `json:"startDate"`
+	FinishDate   time.Time `json:"finishDate"`
+	Summary      string    `json:"summary"`
+	Title        string    `json:"title"`
+	Content      string    `json:"content"`
+	Notice       string    `json:"notice"`
+	ThumbnailURL string    `json:"thumbnailURL"`
 }
 
 type Curriculum struct {
@@ -92,7 +92,7 @@ type Study struct {
 	// 정원 (명수)
 	Limit int `json:"limit"`
 	// 썸네일 (URL)
-	Thumbnail string `json:"thumbnail"`
+	ThumbnailURL string `json:"thumbnailURL"`
 	// 제목
 	Title string `json:"title"`
 	// 이름
@@ -168,16 +168,16 @@ type StudyRequest struct {
 }
 
 type UpdateStudyInput struct {
-	Name       *string      `json:"name"`
-	Limit      *int         `json:"limit"`
-	StartDate  *time.Time   `json:"startDate"`
-	FinishDate *time.Time   `json:"finishDate"`
-	Summary    *string      `json:"summary"`
-	Title      *string      `json:"title"`
-	Content    *string      `json:"content"`
-	Notice     *string      `json:"notice"`
-	Thumbnail  *string      `json:"thumbnail"`
-	Status     *StudyStatus `json:"status"`
+	Name         *string      `json:"name"`
+	Limit        *int         `json:"limit"`
+	StartDate    *time.Time   `json:"startDate"`
+	FinishDate   *time.Time   `json:"finishDate"`
+	Summary      *string      `json:"summary"`
+	Title        *string      `json:"title"`
+	Content      *string      `json:"content"`
+	Notice       *string      `json:"notice"`
+	ThumbnailURL *string      `json:"thumbnailURL"`
+	Status       *StudyStatus `json:"status"`
 }
 
 type UpdateUserInput struct {

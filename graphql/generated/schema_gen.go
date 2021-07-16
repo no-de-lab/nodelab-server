@@ -83,14 +83,14 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateStudy func(childComplexity int, input *CreateStudyInput) int
+		CreateStudy func(childComplexity int, input CreateStudyInput) int
 		DeleteStudy func(childComplexity int, id int) int
 		DeleteUser  func(childComplexity int, email string) int
 		LoginEmail  func(childComplexity int, email string, password string) int
 		LoginSocial func(childComplexity int, provider Provider, accessToken string, email string) int
 		SignupEmail func(childComplexity int, email string, password string) int
-		UpdateStudy func(childComplexity int, id int, input *UpdateStudyInput) int
-		UpdateUser  func(childComplexity int, email string, input *UpdateUserInput) int
+		UpdateStudy func(childComplexity int, id int, input UpdateStudyInput) int
+		UpdateUser  func(childComplexity int, email string, input UpdateUserInput) int
 	}
 
 	PageInfo struct {
@@ -126,7 +126,7 @@ type ComplexityRoot struct {
 		Status              func(childComplexity int) int
 		Summary             func(childComplexity int) int
 		Tags                func(childComplexity int) int
-		Thumbnail           func(childComplexity int) int
+		ThumbnailURL        func(childComplexity int) int
 		Title               func(childComplexity int) int
 		UpdatedAt           func(childComplexity int) int
 		Users               func(childComplexity int) int
@@ -181,10 +181,10 @@ type MutationResolver interface {
 	SignupEmail(ctx context.Context, email string, password string) (*Auth, error)
 	LoginEmail(ctx context.Context, email string, password string) (*Auth, error)
 	LoginSocial(ctx context.Context, provider Provider, accessToken string, email string) (*Auth, error)
-	UpdateUser(ctx context.Context, email string, input *UpdateUserInput) (*User, error)
+	UpdateUser(ctx context.Context, email string, input UpdateUserInput) (*User, error)
 	DeleteUser(ctx context.Context, email string) (string, error)
-	CreateStudy(ctx context.Context, input *CreateStudyInput) (*Study, error)
-	UpdateStudy(ctx context.Context, id int, input *UpdateStudyInput) (*Study, error)
+	CreateStudy(ctx context.Context, input CreateStudyInput) (*Study, error)
+	UpdateStudy(ctx context.Context, id int, input UpdateStudyInput) (*Study, error)
 	DeleteStudy(ctx context.Context, id int) (bool, error)
 }
 type QueryResolver interface {
@@ -356,7 +356,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateStudy(childComplexity, args["input"].(*CreateStudyInput)), true
+		return e.complexity.Mutation.CreateStudy(childComplexity, args["input"].(CreateStudyInput)), true
 
 	case "Mutation.deleteStudy":
 		if e.complexity.Mutation.DeleteStudy == nil {
@@ -428,7 +428,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateStudy(childComplexity, args["id"].(int), args["input"].(*UpdateStudyInput)), true
+		return e.complexity.Mutation.UpdateStudy(childComplexity, args["id"].(int), args["input"].(UpdateStudyInput)), true
 
 	case "Mutation.updateUser":
 		if e.complexity.Mutation.UpdateUser == nil {
@@ -440,7 +440,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateUser(childComplexity, args["email"].(string), args["input"].(*UpdateUserInput)), true
+		return e.complexity.Mutation.UpdateUser(childComplexity, args["email"].(string), args["input"].(UpdateUserInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -639,12 +639,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Study.Tags(childComplexity), true
 
-	case "Study.thumbnail":
-		if e.complexity.Study.Thumbnail == nil {
+	case "Study.thumbnailURL":
+		if e.complexity.Study.ThumbnailURL == nil {
 			break
 		}
 
-		return e.complexity.Study.Thumbnail(childComplexity), true
+		return e.complexity.Study.ThumbnailURL(childComplexity), true
 
 	case "Study.title":
 		if e.complexity.Study.Title == nil {
@@ -982,10 +982,10 @@ type CommentConnection {
   signupEmail(email: String!, password: String!): Auth!
   loginEmail(email: String!, password: String!): Auth!
   loginSocial(provider: Provider!, accessToken: String!, email: String!): Auth!
-  updateUser(email: String!, input: UpdateUserInput): User!
+  updateUser(email: String!, input: UpdateUserInput!): User!
   deleteUser(email: String!): String!
-  createStudy(input: CreateStudyInput): Study!
-  updateStudy(id: Int!, input: UpdateStudyInput): Study!
+  createStudy(input: CreateStudyInput!): Study!
+  updateStudy(id: Int!, input: UpdateStudyInput!): Study!
   deleteStudy(id: Int!): Boolean!
 }
 
@@ -1008,7 +1008,7 @@ input CreateStudyInput {
   title: String!
   content: String!
   notice: String!
-  thumbnail: String!
+  thumbnailURL: String!
 }
 
 
@@ -1021,9 +1021,10 @@ input UpdateStudyInput {
   title: String
   content: String
   notice: String
-  thumbnail: String
+  thumbnailURL: String
   status: StudyStatus
-}`, BuiltIn: false},
+}
+`, BuiltIn: false},
 	{Name: "graphql/definition/pagination.graphql", Input: `union Node = Study | User
 
 type PageInfo {
@@ -1085,7 +1086,7 @@ interface Connection {
   """
   썸네일 (URL)
   """
-  thumbnail: String!
+  thumbnailURL: String!
   """
   제목
   """
@@ -1264,10 +1265,10 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 func (ec *executionContext) field_Mutation_createStudy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *CreateStudyInput
+	var arg0 CreateStudyInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOCreateStudyInput2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐCreateStudyInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateStudyInput2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐCreateStudyInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1399,10 +1400,10 @@ func (ec *executionContext) field_Mutation_updateStudy_args(ctx context.Context,
 		}
 	}
 	args["id"] = arg0
-	var arg1 *UpdateStudyInput
+	var arg1 UpdateStudyInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalOUpdateStudyInput2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐUpdateStudyInput(ctx, tmp)
+		arg1, err = ec.unmarshalNUpdateStudyInput2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐUpdateStudyInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1423,10 +1424,10 @@ func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, 
 		}
 	}
 	args["email"] = arg0
-	var arg1 *UpdateUserInput
+	var arg1 UpdateUserInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalOUpdateUserInput2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐUpdateUserInput(ctx, tmp)
+		arg1, err = ec.unmarshalNUpdateUserInput2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐUpdateUserInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2349,7 +2350,7 @@ func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateUser(rctx, args["email"].(string), args["input"].(*UpdateUserInput))
+		return ec.resolvers.Mutation().UpdateUser(rctx, args["email"].(string), args["input"].(UpdateUserInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2433,7 +2434,7 @@ func (ec *executionContext) _Mutation_createStudy(ctx context.Context, field gra
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateStudy(rctx, args["input"].(*CreateStudyInput))
+		return ec.resolvers.Mutation().CreateStudy(rctx, args["input"].(CreateStudyInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2475,7 +2476,7 @@ func (ec *executionContext) _Mutation_updateStudy(ctx context.Context, field gra
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateStudy(rctx, args["id"].(int), args["input"].(*UpdateStudyInput))
+		return ec.resolvers.Mutation().UpdateStudy(rctx, args["id"].(int), args["input"].(UpdateStudyInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3081,7 +3082,7 @@ func (ec *executionContext) _Study_limit(ctx context.Context, field graphql.Coll
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Study_thumbnail(ctx context.Context, field graphql.CollectedField, obj *Study) (ret graphql.Marshaler) {
+func (ec *executionContext) _Study_thumbnailURL(ctx context.Context, field graphql.CollectedField, obj *Study) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3099,7 +3100,7 @@ func (ec *executionContext) _Study_thumbnail(ctx context.Context, field graphql.
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail, nil
+		return obj.ThumbnailURL, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5833,11 +5834,11 @@ func (ec *executionContext) unmarshalInputCreateStudyInput(ctx context.Context, 
 			if err != nil {
 				return it, err
 			}
-		case "thumbnail":
+		case "thumbnailURL":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
-			it.Thumbnail, err = ec.unmarshalNString2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnailURL"))
+			it.ThumbnailURL, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5917,11 +5918,11 @@ func (ec *executionContext) unmarshalInputUpdateStudyInput(ctx context.Context, 
 			if err != nil {
 				return it, err
 			}
-		case "thumbnail":
+		case "thumbnailURL":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
-			it.Thumbnail, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnailURL"))
+			it.ThumbnailURL, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6536,8 +6537,8 @@ func (ec *executionContext) _Study(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "thumbnail":
-			out.Values[i] = ec._Study_thumbnail(ctx, field, obj)
+		case "thumbnailURL":
+			out.Values[i] = ec._Study_thumbnailURL(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -7269,6 +7270,11 @@ func (ec *executionContext) marshalNCommentEdge2ᚖgithubᚗcomᚋnoᚑdeᚑlab�
 	return ec._CommentEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNCreateStudyInput2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐCreateStudyInput(ctx context.Context, v interface{}) (CreateStudyInput, error) {
+	res, err := ec.unmarshalInputCreateStudyInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNCurriculum2ᚕᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐCurriculumᚄ(ctx context.Context, sel ast.SelectionSet, v []*Curriculum) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -7652,6 +7658,16 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
+func (ec *executionContext) unmarshalNUpdateStudyInput2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐUpdateStudyInput(ctx context.Context, v interface{}) (UpdateStudyInput, error) {
+	res, err := ec.unmarshalInputUpdateStudyInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateUserInput2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐUpdateUserInput(ctx context.Context, v interface{}) (UpdateUserInput, error) {
+	res, err := ec.unmarshalInputUpdateUserInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNUser2githubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐUser(ctx context.Context, sel ast.SelectionSet, v User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
@@ -7956,14 +7972,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
-func (ec *executionContext) unmarshalOCreateStudyInput2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐCreateStudyInput(ctx context.Context, v interface{}) (*CreateStudyInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputCreateStudyInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
 	if v == nil {
 		return nil, nil
@@ -8039,22 +8047,6 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 		return graphql.Null
 	}
 	return graphql.MarshalTime(*v)
-}
-
-func (ec *executionContext) unmarshalOUpdateStudyInput2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐUpdateStudyInput(ctx context.Context, v interface{}) (*UpdateStudyInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputUpdateStudyInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOUpdateUserInput2ᚖgithubᚗcomᚋnoᚑdeᚑlabᚋnodelabᚑserverᚋgraphqlᚋgeneratedᚐUpdateUserInput(ctx context.Context, v interface{}) (*UpdateUserInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputUpdateUserInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

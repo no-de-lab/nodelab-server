@@ -2,10 +2,10 @@ type Mutation {
   signupEmail(email: String!, password: String!): Auth!
   loginEmail(email: String!, password: String!): Auth!
   loginSocial(provider: Provider!, accessToken: String!, email: String!): Auth!
-  updateUser(email: String!, input: UpdateUserInput): User!
+  updateUser(email: String!, input: UpdateUserInput!): User!
   deleteUser(email: String!): String!
-  createStudy(input: CreateStudyInput): Study!
-  updateStudy(id: Int!, input: UpdateStudyInput): Study!
+  createStudy(input: CreateStudyInput!): Study!
+  updateStudy(id: Int!, input: UpdateStudyInput!): Study!
   deleteStudy(id: Int!): Boolean!
 }
 
@@ -28,7 +28,7 @@ input CreateStudyInput {
   title: String!
   content: String!
   notice: String!
-  thumbnail: String!
+  thumbnailURL: String!
 }
 
 
@@ -41,6 +41,6 @@ input UpdateStudyInput {
   title: String
   content: String
   notice: String
-  thumbnail: String
+  thumbnailURL: String
   status: StudyStatus
 }

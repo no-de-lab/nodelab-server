@@ -25,7 +25,7 @@ func (r *mutationResolver) LoginSocial(ctx context.Context, provider gqlschema.P
 	return r.ar.LoginSocial(ctx, provider, accessToken, email)
 }
 
-func (r *mutationResolver) UpdateUser(ctx context.Context, email string, input *gqlschema.UpdateUserInput) (*gqlschema.User, error) {
+func (r *mutationResolver) UpdateUser(ctx context.Context, email string, input gqlschema.UpdateUserInput) (*gqlschema.User, error) {
 	c := ctx.Value(EchoCtxKey{})
 
 	ec, ok := c.(echo.Context)
@@ -47,7 +47,7 @@ func (r *mutationResolver) DeleteUser(ctx context.Context, email string) (string
 	return r.ur.DeleteUser(ctx, email)
 }
 
-func (r *mutationResolver) CreateStudy(ctx context.Context, input *gqlschema.CreateStudyInput) (*gqlschema.Study, error) {
+func (r *mutationResolver) CreateStudy(ctx context.Context, input gqlschema.CreateStudyInput) (*gqlschema.Study, error) {
 	c := ctx.Value(EchoCtxKey{})
 
 	ec, ok := c.(echo.Context)
@@ -64,7 +64,7 @@ func (r *mutationResolver) CreateStudy(ctx context.Context, input *gqlschema.Cre
 	return r.sr.CreateStudy(ctx, payload.Email, input)
 }
 
-func (r *mutationResolver) UpdateStudy(ctx context.Context, id int, input *gqlschema.UpdateStudyInput) (*gqlschema.Study, error) {
+func (r *mutationResolver) UpdateStudy(ctx context.Context, id int, input gqlschema.UpdateStudyInput) (*gqlschema.Study, error) {
 	c := ctx.Value(EchoCtxKey{})
 
 	ec, ok := c.(echo.Context)
