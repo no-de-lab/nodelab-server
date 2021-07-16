@@ -10,20 +10,20 @@ import (
 
 // Study is a struct to represent a nodelab study
 type Study struct {
-	ID         string                `json:"id" db:"id"`
-	CreatedAt  time.Time             `json:"created_at" db:"created_at"`
-	UpdatedAt  time.Time             `json:"updated_at" db:"updated_at"`
-	Name       string                `json:"name" db:"name"`
-	Limit      int                   `json:"limit" db:"limit"`
-	StartDate  time.Time             `json:"start_date" db:"start_date"`
-	FinishDate time.Time             `json:"finish_date" db:"finish_date"`
-	Summary    string                `json:"summary" db:"summary"`
-	Title      string                `json:"title" db:"title"`
-	Content    string                `json:"content" db:"content"`
-	LeaderID   int                   `json:"leader_id" db:"leader_id"`
-	Notice     string                `json:"notice" db:"notice"`
-	Thumbnail  string                `json:"thumbnail" db:"thumbnail_url"`
-	Status     gqlschema.StudyStatus `json:"status" db:"status"`
+	ID           string                `json:"id" db:"id"`
+	CreatedAt    time.Time             `json:"created_at" db:"created_at"`
+	UpdatedAt    time.Time             `json:"updated_at" db:"updated_at"`
+	Name         string                `json:"name" db:"name"`
+	Limit        int                   `json:"limit" db:"limit"`
+	StartDate    time.Time             `json:"start_date" db:"start_date"`
+	FinishDate   time.Time             `json:"finish_date" db:"finish_date"`
+	Summary      string                `json:"summary" db:"summary"`
+	Title        string                `json:"title" db:"title"`
+	Content      string                `json:"content" db:"content"`
+	LeaderID     int                   `json:"leader_id" db:"leader_id"`
+	Notice       string                `json:"notice" db:"notice"`
+	ThumbnailURL string                `json:"thumbnail_url" db:"thumbnail_url"`
+	Status       gqlschema.StudyStatus `json:"status" db:"status"`
 }
 
 // StudyRepository is the respository layer for study

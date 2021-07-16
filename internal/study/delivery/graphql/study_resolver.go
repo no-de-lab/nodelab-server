@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"strconv"
@@ -68,7 +67,7 @@ func (sr *StudyResolver) FindByTitle(ctx context.Context, title string) ([]*gqls
 }
 
 // CreateStudy create a study
-func (sr *StudyResolver) CreateStudy(ctx context.Context, email string, input *gqlschema.CreateStudyInput) (*gqlschema.Study, error) {
+func (sr *StudyResolver) CreateStudy(ctx context.Context, email string, input gqlschema.CreateStudyInput) (*gqlschema.Study, error) {
 
 	user, err := sr.StudyService.FindByEmail(ctx, email)
 	if err != nil {
@@ -82,16 +81,16 @@ func (sr *StudyResolver) CreateStudy(ctx context.Context, email string, input *g
 	}
 
 	si := &sm.CreateStudy{
-		Name:       input.Name,
-		Limit:      input.Limit,
-		StartDate:  input.StartDate,
-		FinishDate: input.FinishDate,
-		Summary:    input.Summary,
-		Title:      input.Title,
-		Content:    input.Content,
-		Thumbnail:  input.Thumbnail,
-		LeaderID:   userID,
-		Notice:     input.Notice,
+		Name:         input.Name,
+		Limit:        input.Limit,
+		StartDate:    input.StartDate,
+		FinishDate:   input.FinishDate,
+		Summary:      input.Summary,
+		Title:        input.Title,
+		Content:      input.Content,
+		ThumbnailURL: input.ThumbnailURL,
+		LeaderID:     userID,
+		Notice:       input.Notice,
 	}
 	study, err := sr.StudyService.CreateStudy(ctx, si)
 
@@ -99,18 +98,20 @@ func (sr *StudyResolver) CreateStudy(ctx context.Context, email string, input *g
 		return nil, err
 	}
 	var gqlStudy gqlschema.Study
-	errs := model.Copy(&gqlStudy, study)
-	fmt.Println("errs", errs)
-	fmt.Println("gqlModel", study.Status)
+	model.Copy(&gqlStudy, study)
 
 	return &gqlStudy, nil
 }
 
 // UpdateStudy update a study
-func (sr *StudyResolver) UpdateStudy(ctx context.Context, email string, id int, input *gqlschema.UpdateStudyInput) (*gqlschema.Study, error) {
+func (sr *StudyResolver) UpdateStudy(ctx context.Context, email string, id int, input gqlschema.UpdateStudyInput) (*gqlschema.Study, error) {
 
 	study, err := sr.StudyService.FindByID(ctx, id)
 	if !errors.Is(err, sql.ErrNoRows) && err != nil {
+		return nil, err
+	}
+
+	if err != nil {
 		return nil, e.NewInternalError("can not find study", err, http.StatusInternalServerError)
 	}
 
@@ -130,16 +131,16 @@ func (sr *StudyResolver) UpdateStudy(ctx context.Context, email string, id int, 
 	}
 
 	su := &sm.UpdateStudy{
-		ID:         id,
-		Name:       input.Name,
-		Limit:      input.Limit,
-		StartDate:  input.StartDate,
-		FinishDate: input.FinishDate,
-		Summary:    input.Summary,
-		Title:      input.Title,
-		Content:    input.Content,
-		Thumbnail:  input.Thumbnail,
-		Status:     input.Status,
+		ID:           id,
+		Name:         input.Name,
+		Limit:        input.Limit,
+		StartDate:    input.StartDate,
+		FinishDate:   input.FinishDate,
+		Summary:      input.Summary,
+		Title:        input.Title,
+		Content:      input.Content,
+		ThumbnailURL: input.ThumbnailURL,
+		Status:       input.Status,
 	}
 
 	study, err = sr.StudyService.UpdateStudy(ctx, su)
@@ -152,8 +153,7 @@ func (sr *StudyResolver) UpdateStudy(ctx context.Context, email string, id int, 
 	}
 
 	var gqlStudy gqlschema.Study
-	errs := model.Copy(&gqlStudy, study)
-	fmt.Println(errs)
+	model.Copy(&gqlStudy, study)
 
 	return &gqlStudy, nil
 }
@@ -162,6 +162,10 @@ func (sr *StudyResolver) UpdateStudy(ctx context.Context, email string, id int, 
 func (sr *StudyResolver) DeleteStudy(ctx context.Context, email string, id int) (bool, error) {
 	study, err := sr.StudyService.FindByID(ctx, id)
 	if !errors.Is(err, sql.ErrNoRows) && err != nil {
+		return false, err
+	}
+
+	if err != nil {
 		return false, e.NewInternalError("can not find study", err, http.StatusInternalServerError)
 	}
 
