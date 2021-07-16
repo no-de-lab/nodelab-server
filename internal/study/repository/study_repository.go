@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
@@ -56,7 +55,6 @@ func (r *studyDBRepository) FindByTitle(ctx context.Context, title string) (*[]d
 
 // CreateStudy create study
 func (r *studyDBRepository) CreateStudy(ctx context.Context, input *sm.CreateStudy) (*domain.Study, error) {
-	fmt.Println(input.Notice)
 	res, err := r.DB.NamedExecContext(ctx, CreateStudyQuery, input)
 	if err != nil {
 		return nil, err
@@ -66,8 +64,6 @@ func (r *studyDBRepository) CreateStudy(ctx context.Context, input *sm.CreateStu
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(studyID)
 
 	return r.FindByID(ctx, int(studyID))
 }
