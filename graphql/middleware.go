@@ -22,6 +22,7 @@ func EchoContextToContextMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 func CORSMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		c.Response().Header().Set(echo.HeaderAccessControlAllowOrigin, "http:/3.36.166.101")
+		c.Response().Header().Set("Vary", "Origin")
 
 		return next(c)
 	}
