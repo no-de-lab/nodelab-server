@@ -2,6 +2,7 @@ package graphql
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -31,6 +32,7 @@ func SetupGraphQL(e *echo.Echo, resolver *resolver.Resolver, cfg *config.Configu
 	e.Use(EchoContextToContextMiddleware)
 	e.Use(CORSMiddleware)
 
+	e.OPTIONS(graphqlEndpoint, addHeaders)
 	e.POST(graphqlEndpoint, func(c echo.Context) error {
 		cc := c.(*EchoContext)
 		graphqlHandler.ServeHTTP(cc.Response(), cc.Request())
@@ -40,4 +42,16 @@ func SetupGraphQL(e *echo.Echo, resolver *resolver.Resolver, cfg *config.Configu
 		playgroundHandler.ServeHTTP(c.Response(), c.Request())
 		return nil
 	})
+}
+
+func addHeaders(c echo.Context) error {
+	headers := c.Response().Header()
+	headers.Add("Access-Control-Allow-Origin", "*")
+	headers.Add("Vary", "Origin")
+	headers.Add("Vary", "Access-Control-Request-Method")
+	headers.Add("Vary", "Access-Control-Request-Headers")
+	headers.Add("Access-Control-Allow-Headers", "Content-Type, Origin, Accept, token")
+	headers.Add("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE, PUT")
+	c.Response().WriteHeader(http.StatusOK)
+	return nil
 }
