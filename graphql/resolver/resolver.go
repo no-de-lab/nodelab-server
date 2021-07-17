@@ -2,6 +2,7 @@ package resolver
 
 import (
 	ag "github.com/no-de-lab/nodelab-server/internal/auth/delivery/graphql"
+	sg "github.com/no-de-lab/nodelab-server/internal/study/delivery/graphql"
 	ug "github.com/no-de-lab/nodelab-server/internal/user/delivery/graphql"
 )
 
@@ -16,15 +17,18 @@ type EchoCtxKey struct{}
 type Resolver struct {
 	ur *ug.UserResolver
 	ar *ag.AuthResolver
+	sr *sg.StudyResolver
 }
 
 // NewResolver return new root resolver instance
 func NewResolver(
 	userResolver *ug.UserResolver,
 	authResolver *ag.AuthResolver,
+	studyResolver *sg.StudyResolver,
 ) *Resolver {
 	return &Resolver{
 		ur: userResolver,
 		ar: authResolver,
+		sr: studyResolver,
 	}
 }

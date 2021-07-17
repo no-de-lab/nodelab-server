@@ -18,7 +18,11 @@ func (r *queryResolver) Studies(ctx context.Context) (*gqlschema.StudyConnection
 }
 
 func (r *queryResolver) Study(ctx context.Context, id string) (*gqlschema.Study, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.sr.FindByID(ctx, id)
+}
+
+func (r *queryResolver) StudyByTitle(ctx context.Context, title string) ([]*gqlschema.Study, error) {
+	return r.sr.FindByTitle(ctx, title)
 }
 
 func (r *queryResolver) User(ctx context.Context, id string) (*gqlschema.User, error) {

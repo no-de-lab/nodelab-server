@@ -65,7 +65,7 @@ func (ur *UserResolver) Me(ctx context.Context, email string) (*gqlschema.User, 
 }
 
 // UpdateUser updates the current user's information with the given payload
-func (ur *UserResolver) UpdateUser(ctx context.Context, email string, payload *gqlschema.UpdateUserInput) (*gqlschema.User, error) {
+func (ur *UserResolver) UpdateUser(ctx context.Context, email string, payload gqlschema.UpdateUserInput) (*gqlschema.User, error) {
 	uim := &um.UserInfo{
 		Email:     email,
 		Username:  payload.Username,

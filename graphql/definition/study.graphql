@@ -18,11 +18,15 @@ type Study {
   """
   썸네일 (URL)
   """
-  thumbnail: String!
+  thumbnailURL: String!
   """
   제목
   """
   title: String!
+  """
+  이름
+  """
+  name: String!
   """
   내용 (HTML)
   """
@@ -46,7 +50,11 @@ type Study {
   """
   시작일
   """
-  startedAt: String!
+  startDate: Time!
+  """
+  종료일
+  """
+  finishDate: Time!
   """
   study 구성원 내역
   """
@@ -76,8 +84,8 @@ type Study {
   """
   viewerHasBookmarked: Boolean!
 
-  createdAt: String!
-  updatedAt: String!
+  createdAt: Time!
+  updatedAt: Time!
 }
 
 type StudyEdge implements Edge {
@@ -128,8 +136,8 @@ type StudyRequest {
   신청할떄 보내는 내용
   """
   content: String!
-  createdAt: String!
-  updatedAt: String!
+  createdAt: Time!
+  updatedAt: Time!
 }
 
 type Curriculum {

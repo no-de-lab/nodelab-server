@@ -2,11 +2,15 @@ package service
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/no-de-lab/nodelab-server/config"
+	e "github.com/no-de-lab/nodelab-server/error"
 	"github.com/no-de-lab/nodelab-server/internal/domain"
 	um "github.com/no-de-lab/nodelab-server/internal/user/model"
 )
@@ -25,17 +29,21 @@ func NewUserService(userRepository domain.UserRepository, config *config.Configu
 }
 
 // FindByID finds user by id
-func (s *userService) FindByID(c context.Context, id int) (user *domain.User, err error) {
+func (s *userService) FindByID(c context.Context, id int) (*domain.User, error) {
 	ctx, cancel := context.WithTimeout(c, s.timeout)
 	defer cancel()
 
-	user, err = s.userRepository.FindByID(ctx, id)
+	user, err := s.userRepository.FindByID(ctx, id)
 
-	if err != nil {
-		return
+	if !errors.Is(err, sql.ErrNoRows) && err != nil {
+		return nil, err
 	}
 
-	return
+	if err != nil {
+		return nil, e.NewInternalError("can not find User", err, http.StatusInternalServerError)
+	}
+
+	return user, nil
 }
 
 // FindByEmail finds user by email
@@ -44,8 +52,12 @@ func (s *userService) FindByEmail(c context.Context, email string) (*domain.User
 	defer cancel()
 
 	user, err := s.userRepository.FindByEmail(ctx, email)
-	if err != nil {
+	if !errors.Is(err, sql.ErrNoRows) && err != nil {
 		return nil, err
+	}
+
+	if err != nil {
+		return nil, e.NewInternalError("can not find User", err, http.StatusInternalServerError)
 	}
 
 	return user, nil
@@ -56,17 +68,12 @@ func (s *userService) UpdateUser(c context.Context, userInfo *um.UserInfo) (*dom
 	ctx, cancel := context.WithTimeout(c, s.timeout)
 	defer cancel()
 
-	err := s.userRepository.UpdateUser(ctx, userInfo)
+	user, err := s.userRepository.UpdateUser(ctx, userInfo)
 	if err != nil {
 		if err.(*mysql.MySQLError).Number == 1062 {
 			return nil, fmt.Errorf("username: %s already exists", *userInfo.Username)
 		}
 		return nil, fmt.Errorf("failed to update user: %v", err)
-	}
-
-	user, err := s.userRepository.FindByEmail(ctx, userInfo.Email)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read updated user: %v", err)
 	}
 
 	return user, nil

@@ -25,7 +25,7 @@ func (r *mutationResolver) LoginSocial(ctx context.Context, provider gqlschema.P
 	return r.ar.LoginSocial(ctx, provider, accessToken, email)
 }
 
-func (r *mutationResolver) UpdateUser(ctx context.Context, email string, input *gqlschema.UpdateUserInput) (*gqlschema.User, error) {
+func (r *mutationResolver) UpdateUser(ctx context.Context, email string, input gqlschema.UpdateUserInput) (*gqlschema.User, error) {
 	c := ctx.Value(EchoCtxKey{})
 
 	ec, ok := c.(echo.Context)
@@ -45,6 +45,59 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, email string, input *
 
 func (r *mutationResolver) DeleteUser(ctx context.Context, email string) (string, error) {
 	return r.ur.DeleteUser(ctx, email)
+}
+
+func (r *mutationResolver) CreateStudy(ctx context.Context, input gqlschema.CreateStudyInput) (*gqlschema.Study, error) {
+	c := ctx.Value(EchoCtxKey{})
+
+	ec, ok := c.(echo.Context)
+	if !ok {
+		err := fmt.Errorf("failed to convert context to echo context")
+		return nil, err
+	}
+
+	payload, ok := ec.Get(middleware.UserPayloadCtxKey).(*util.Payload)
+	if !ok {
+		err := fmt.Errorf("failed to get user payload from context")
+		return nil, err
+	}
+	return r.sr.CreateStudy(ctx, payload.Email, input)
+}
+
+func (r *mutationResolver) UpdateStudy(ctx context.Context, id int, input gqlschema.UpdateStudyInput) (*gqlschema.Study, error) {
+	c := ctx.Value(EchoCtxKey{})
+
+	ec, ok := c.(echo.Context)
+	if !ok {
+		err := fmt.Errorf("failed to convert context to echo context")
+		return nil, err
+	}
+
+	payload, ok := ec.Get(middleware.UserPayloadCtxKey).(*util.Payload)
+	if !ok {
+		err := fmt.Errorf("failed to get user payload from context")
+		return nil, err
+	}
+
+	return r.sr.UpdateStudy(ctx, payload.Email, id, input)
+}
+
+func (r *mutationResolver) DeleteStudy(ctx context.Context, id int) (bool, error) {
+	c := ctx.Value(EchoCtxKey{})
+
+	ec, ok := c.(echo.Context)
+	if !ok {
+		err := fmt.Errorf("failed to convert context to echo context")
+		return false, err
+	}
+
+	payload, ok := ec.Get(middleware.UserPayloadCtxKey).(*util.Payload)
+	if !ok {
+		err := fmt.Errorf("failed to get user payload from context")
+		return false, err
+	}
+
+	return r.sr.DeleteStudy(ctx, payload.Email, id)
 }
 
 // Mutation returns gqlschema.MutationResolver implementation.

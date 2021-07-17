@@ -22,45 +22,46 @@ func NewUserRepository(db *sqlx.DB) domain.UserRepository {
 }
 
 // FindByID finds a user by ID
-func (r *userDBRepository) FindByID(ctx context.Context, id int) (user *domain.User, err error) {
+func (r *userDBRepository) FindByID(ctx context.Context, id int) (*domain.User, error) {
 	u := domain.User{}
-	err = r.DB.GetContext(ctx, &u, FindByIDQuery, id)
+	err := r.DB.GetContext(ctx, &u, FindByIDQuery, id)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
+		return nil, err
 	}
 
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	return &u, nil
 }
 
 // FindByEmail finds a user by email
-func (r *userDBRepository) FindByEmail(ctx context.Context, email string) (user *domain.User, err error) {
+func (r *userDBRepository) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
 	u := domain.User{}
-	err = r.DB.GetContext(ctx, &u, FindByEmailQuery, email)
+	err := r.DB.GetContext(ctx, &u, FindByEmailQuery, email)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
+		return nil, err
 	}
 
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	return &u, nil
 }
 
 // UpdateUser updates a user
-func (r *userDBRepository) UpdateUser(ctx context.Context, userInfo *um.UserInfo) error {
+func (r *userDBRepository) UpdateUser(ctx context.Context, userInfo *um.UserInfo) (*domain.User, error) {
 	_, err := r.DB.NamedExecContext(ctx, updateUserByEmailQuery, userInfo)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return r.FindByID(ctx, userInfo.ID)
+
 }
 
 // DeleteUser deletes a user
