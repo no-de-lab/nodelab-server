@@ -42,6 +42,7 @@ func SetupGraphQL(e *echo.Echo, resolver *resolver.Resolver, cfg *config.Configu
 		playgroundHandler.ServeHTTP(c.Response(), c.Request())
 		return nil
 	})
+	e.OPTIONS(graphqlEndpoint, echo.MethodNotAllowedHandler)
 }
 
 func addHeaders(c echo.Context) error {
