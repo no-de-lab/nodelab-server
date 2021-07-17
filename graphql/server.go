@@ -30,8 +30,8 @@ func SetupGraphQL(e *echo.Echo, resolver *resolver.Resolver, cfg *config.Configu
 
 	e.Use(middleware.Authorize(util.NewJWTMaker(cfg)))
 	e.Use(EchoContextToContextMiddleware)
-	e.Use(middleware.CORS)
 	// e.Use(CORSMiddleware)
+	e.Use(CORSMiddlewareWrapper)
 
 	e.OPTIONS(graphqlEndpoint, addHeaders)
 	e.POST(graphqlEndpoint, func(c echo.Context) error {
