@@ -2,7 +2,6 @@ package graphql
 
 import (
 	"context"
-	"log"
 
 	"github.com/no-de-lab/nodelab-server/graphql/resolver"
 
@@ -22,10 +21,12 @@ func EchoContextToContextMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 // CORSMiddleware adds CORS header to requests
 func CORSMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		log.Println(c.Request().Header)
-		c.Response().Header().Set(echo.HeaderAccessControlAllowOrigin, "http:/3.36.166.101")
-		c.Response().Header().Set("Vary", "Origin")
 
+		c.Response().Header().Set(echo.HeaderAccessControlAllowOrigin, "http:/3.36.166.101")
+
+		c.Response().Header().Set("Vary", "Origin")
+		c.Response().Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		c.Response().Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 		return next(c)
 	}
 }
