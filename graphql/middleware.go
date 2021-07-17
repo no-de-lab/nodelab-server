@@ -21,9 +21,8 @@ func EchoContextToContextMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 // CORSMiddleware adds CORS header to requests
 func CORSMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		c.Response().Header().Set(echo.HeaderAccessControlAllowOrigin, "https://3.36.166.101")
-		c.Response().Header().Set(echo.HeaderAccessControlAllowOrigin, "http://3.36.166.101")
-		c.Response().Header().Set(echo.HeaderAccessControlAllowOrigin, "http://localhost:3000")
+
+		c.Response().Header().Set(echo.HeaderAccessControlAllowOrigin, "https://3.36.166.101, http:/3.36.166.101, http://localhost:3000")
 
 		return next(c)
 	}
