@@ -43,7 +43,7 @@ func (r *studyDBRepository) FindByTitle(ctx context.Context, title string) (*[]d
 	err := r.DB.GetContext(ctx, &s, FindByTitleQuery, title)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
+		return nil, err
 	}
 
 	if err != nil {
@@ -94,7 +94,7 @@ func (r *studyDBRepository) FindByEmail(ctx context.Context, email string) (*dom
 	err := r.DB.GetContext(ctx, &u, FindByEmailQuery, email)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
+		return nil, err
 	}
 
 	if err != nil {

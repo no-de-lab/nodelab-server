@@ -27,7 +27,7 @@ func (r *userDBRepository) FindByID(ctx context.Context, id int) (*domain.User, 
 	err := r.DB.GetContext(ctx, &u, FindByIDQuery, id)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
+		return nil, err
 	}
 
 	if err != nil {
@@ -43,7 +43,7 @@ func (r *userDBRepository) FindByEmail(ctx context.Context, email string) (*doma
 	err := r.DB.GetContext(ctx, &u, FindByEmailQuery, email)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
+		return nil, err
 	}
 
 	if err != nil {
