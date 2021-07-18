@@ -47,8 +47,8 @@ func SetupGraphQL(e *echo.Echo, resolver *resolver.Resolver, cfg *config.Configu
 }
 
 func addHeaders(c echo.Context) error {
-	// headers := c.Response().Header()
-	// headers.Add("Access-Control-Allow-Origin", "http://3.36.166.101")
+	headers := c.Response().Header()
+	headers.Add("Access-Control-Allow-Origin", "*")
 	// headers.Add("Vary", "Origin")
 	// headers.Add("Vary", "Access-Control-Request-Method")
 	// headers.Add("Vary", "Access-Control-Request-Headers")
