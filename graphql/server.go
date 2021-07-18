@@ -28,11 +28,11 @@ func SetupGraphQL(e *echo.Echo, resolver *resolver.Resolver, cfg *config.Configu
 	graphqlHandler := handler.NewDefaultServer(gqlschema.NewExecutableSchema(gqlschema.Config{Resolvers: resolver}))
 	playgroundHandler := playground.Handler("GraphQL", graphqlEndpoint)
 
-	e.Use(middleware.Authorize(util.NewJWTMaker(cfg)))
 	// e.Use(EchoContextToContextMiddleware)
 	e.Use(CORSMiddleware)
 	// e.Use(CORSMiddlewareWrapper)
 
+	e.Use(middleware.Authorize(util.NewJWTMaker(cfg)))
 	e.OPTIONS(graphqlEndpoint, addHeaders)
 	e.POST(graphqlEndpoint, func(c echo.Context) error {
 		cc := c.(*EchoContext)
@@ -43,12 +43,9 @@ func SetupGraphQL(e *echo.Echo, resolver *resolver.Resolver, cfg *config.Configu
 		playgroundHandler.ServeHTTP(c.Response(), c.Request())
 		return nil
 	})
-	// e.OPTIONS(graphqlEndpoint, echo.MethodNotAllowedHandler)
 }
 
 func addHeaders(c echo.Context) error {
-	headers := c.Response().Header()
-	headers.Add("Access-Control-Allow-Origin", "*")
 	// headers.Add("Vary", "Origin")
 	// headers.Add("Vary", "Access-Control-Request-Method")
 	// headers.Add("Vary", "Access-Control-Request-Headers")
