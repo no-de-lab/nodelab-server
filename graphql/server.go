@@ -38,7 +38,7 @@ func SetupGraphQL(e *echo.Echo, resolver *resolver.Resolver, cfg *config.Configu
 		cc := c.(*EchoContext)
 		graphqlHandler.ServeHTTP(cc.Response(), cc.Request())
 		return nil
-	})
+	}, ACAOHeaderOverwriteMiddleware)
 	e.GET(graphqlEndpoint, func(c echo.Context) error {
 		playgroundHandler.ServeHTTP(c.Response(), c.Request())
 		return nil
