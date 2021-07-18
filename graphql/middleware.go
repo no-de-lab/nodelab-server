@@ -6,7 +6,6 @@ import (
 	"github.com/no-de-lab/nodelab-server/graphql/resolver"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 )
 
 // EchoContextToContextMiddleware wraps echo context to standard context
@@ -29,19 +28,5 @@ func CORSMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		c.Response().Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 		c.Response().Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 		return next(c)
-	}
-}
-
-// CORSMiddlewareWrapper adds CORS header to requests
-func CORSMiddlewareWrapper(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(ctx echo.Context) error {
-		req := ctx.Request()
-		dynamicCORSConfig := middleware.CORSConfig{
-			AllowOrigins: []string{req.Header.Get("Origin")},
-			AllowHeaders: []string{"Accept", "Cache-Control", "Content-Type", "X-Requested-With"},
-		}
-		CORSMiddleware := middleware.CORSWithConfig(dynamicCORSConfig)
-		CORSHandler := CORSMiddleware(next)
-		return CORSHandler(ctx)
 	}
 }

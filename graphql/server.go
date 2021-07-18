@@ -28,7 +28,7 @@ func SetupGraphQL(e *echo.Echo, resolver *resolver.Resolver, cfg *config.Configu
 	graphqlHandler := handler.NewDefaultServer(gqlschema.NewExecutableSchema(gqlschema.Config{Resolvers: resolver}))
 	playgroundHandler := playground.Handler("GraphQL", graphqlEndpoint)
 
-	// e.Use(EchoContextToContextMiddleware)
+	e.Use(EchoContextToContextMiddleware)
 	e.Use(CORSMiddleware)
 	// e.Use(CORSMiddlewareWrapper)
 
