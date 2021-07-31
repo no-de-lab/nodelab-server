@@ -29,7 +29,7 @@ down:
 	@docker-compose -f docker-compose.local.yaml down -v
 
 build:
-	@CGO_ENABLED=0 GOOS=linux go build -o nodelabd ./cmd/...
+	@CGO_ENABLED=0 GOOS=linux go build -o nodelabd ./cmd/nodelabd/...
 
 # build for air
 build-air:
