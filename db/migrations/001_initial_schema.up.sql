@@ -49,4 +49,4 @@ CREATE TABLE IF NOT EXISTS nodelab.study (
    FOREIGN KEY (`leader_id`) REFERENCES user(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='스터디';
 
-CREATE INDEX IF NOT EXISTS study_title_idx on nodelab.study (title);
+CREATE INDEX study_title_idx ON nodelab.study(`title`);
