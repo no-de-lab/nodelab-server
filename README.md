@@ -89,6 +89,15 @@ $ make down
 - build-air
   - build for air
 
+## DB Migration
+
+To migrate up, use positive number of steps
+To migrate down, use negative number of steps
+
+```
+go run ./cmd/migrate/main.go -steps=NUMBER_OF_STEPS
+```
+
 ## App Configuration
 
 ```toml
